@@ -1,0 +1,3440 @@
+```python
+import zipfile, os
+
+with zipfile.ZipFile('opensociety.zip', 'r') as z:
+    z.extractall('/tmp/opensociety_extracted')
+
+# Check top-level files and READMEs
+for root, dirs, files in os.walk('/tmp/opensociety_extracted'):
+    if '.git' in root or 'node_modules' in root or 'drizzle' in root:
+        continue
+    for f in files:
+        if f in ['README.md', 'package.json', 'schema.dbml', 'index.ts', 'compose.yaml']:
+            print(os.path.join(root, f))
+
+
+```
+
+```text
+/tmp/opensociety_extracted/opensociety/package.json
+/tmp/opensociety_extracted/opensociety/README.md
+/tmp/opensociety_extracted/opensociety/apps/api/package.json
+/tmp/opensociety_extracted/opensociety/apps/api/README.md
+/tmp/opensociety_extracted/opensociety/apps/api/src/index.ts
+/tmp/opensociety_extracted/opensociety/apps/mobile/package.json
+/tmp/opensociety_extracted/opensociety/apps/mobile/components/README.md
+/tmp/opensociety_extracted/opensociety/apps/mobile/hooks/README.md
+/tmp/opensociety_extracted/opensociety/apps/mobile/lib/README.md
+/tmp/opensociety_extracted/opensociety/apps/mobile/stores/README.md
+/tmp/opensociety_extracted/opensociety/apps/web/package.json
+/tmp/opensociety_extracted/opensociety/apps/web/README.md
+/tmp/opensociety_extracted/opensociety/deploy/compose.yaml
+/tmp/opensociety_extracted/opensociety/deploy/README.md
+/tmp/opensociety_extracted/opensociety/docs/screenshots/README.md
+/tmp/opensociety_extracted/opensociety/packages/db/package.json
+/tmp/opensociety_extracted/opensociety/packages/db/README.md
+/tmp/opensociety_extracted/opensociety/packages/db/schema.dbml
+/tmp/opensociety_extracted/opensociety/packages/db/src/index.ts
+/tmp/opensociety_extracted/opensociety/packages/db/src/schema/index.ts
+/tmp/opensociety_extracted/opensociety/packages/eslint-config/package.json
+/tmp/opensociety_extracted/opensociety/packages/shared/package.json
+/tmp/opensociety_extracted/opensociety/packages/shared/src/index.ts
+/tmp/opensociety_extracted/opensociety/packages/typescript-config/package.json
+
+
+```
+
+```python
+def read_file(path, max_chars=8000):
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return f.read()[:max_chars]
+    except Exception as e:
+        return str(e)
+
+print("=== ROOT README ===")
+print(read_file('/tmp/opensociety_extracted/opensociety/README.md'))
+print("\n=== ROOT PACKAGE.JSON ===")
+print(read_file('/tmp/opensociety_extracted/opensociety/package.json'))
+print("\n=== API PACKAGE.JSON ===")
+print(read_file('/tmp/opensociety_extracted/opensociety/apps/api/package.json'))
+print("\n=== WEB PACKAGE.JSON ===")
+print(read_file('/tmp/opensociety_extracted/opensociety/apps/web/package.json'))
+print("\n=== MOBILE PACKAGE.JSON ===")
+print(read_file('/tmp/opensociety_extracted/opensociety/apps/mobile/package.json'))
+
+
+```
+
+```text
+=== ROOT README ===
+# OpenSociety
+
+**A little closer to home.**
+
+OpenSociety is an ad-free, open-source app for apartment communities. Welcome guests, keep up with neighbourhood notices, track maintenance bills, and take care of everyday requests from one calm, thoughtfully designed place.
+
+Residents and gate staff use the iPhone and Android app. Community administrators manage the society from a web dashboard. Each society runs its own API and database, keeping its records separate and its deployment under its control.
+
+[Explore the app](#a-look-inside) · [Availability](#availability) · [Try the demo](#try-the-demo) · [Run locally](#run-locally) · [Deployment guide](deploy/README.md) · [Contribute](#contributing)
+
+## A look inside
+
+These are actual native app captures from iPhone and Android simulators, using fictional demo data. Select an image to see the full-size screen.
+
+<p>
+  <a href="docs/screenshots/ios-home.png"><img src="docs/screenshots/ios-home.png" width="240" alt="iPhone: resident home with an invitation card and shortcuts to visitors and bills"></a>
+  <a href="docs/screenshots/android-guest-pass.png"><img src="docs/screenshots/android-guest-pass.png" width="240" alt="Android: a guest pass with a QR code, entry code, and share button"></a>
+  <a href="docs/screenshots/ios-notices.png"><img src="docs/screenshots/ios-notices.png" width="240" alt="iPhone: community notices with read status, priority, and an attachment"></a>
+</p>
+
+*Resident home (iPhone) · Guest pass (Android) · Notices (iPhone)*
+
+A clear view of bills and payments, the people who help at home, and arrivals at the gate.
+
+<p>
+  <a href="docs/screenshots/android-bills.png"><img src="docs/screenshots/android-bills.png" width="240" alt="Android: maintenance bills, payment history, and a statement of account"></a>
+  <a href="docs/screenshots/ios-house-help.png"><img src="docs/screenshots/ios-house-help.png" width="240" alt="iPhone: assigned household help with rating and assignment actions"></a>
+  <a href="docs/screenshots/android-gate.png"><img src="docs/screenshots/android-gate.png" width="240" alt="Android: gate desk with QR scanning, visitor registration, check-in, and check-out"></a>
+</p>
+
+*Bills (Android) · Household help (iPhone) · Gate desk (Android)*
+
+## Everyday community life
+
+| For | What you can do |
+| --- | --- |
+| **Residents** | Pre-approve guests and share QR passes, approve or deny visitors, read notices, view bills and payment history, raise maintenance tickets, and manage household help and vehicles. |
+| **Gate staff** | Register visitors, scan passes or enter codes, check people in and out, verify vehicles, and record duty attendance. Visitor registration can queue while offline. |
+| **Administrators** | Manage apartments and resident approvals, gate staff, notices, billing, expenses, maintenance tickets, parking, and reports from the web dashboard. |
+
+The mobile app supports English and Hindi, system text scaling, and layouts for smaller screens. Additional regional languages are deferred.
+
+## Availability
+
+**OpenSociety is preparing for its first pilot.** The mobile design is implemented and reviewed on iPhone and Android simulators. Public hosting and App Store / Google Play distribution are still pending, along with physical-device, screen-reader, and live-service acceptance checks.
+
+You can explore the code and run a development instance today. A society deployment needs its own database, authentication configuration, storage, and hosting; running those services can incur costs. Start with the [deployment guide](deploy/README.md) and [mobile release guide](docs/mobile.md) when preparing a pilot.
+
+## Try the demo
+
+The web dashboard has a no-signup demo at `/demo`, also reachable from **Try the demo** on the home page. The phone app offers **Try demo** on the sign-in screen, as a Resident or a Guard. Both show a fictional sample society and keep every change in the browser tab or on the device; they never call the society API or Clerk. **Reset demo** restores fresh sample data. [`apps/mobile/DEMO.md`](apps/mobile/DEMO.md) covers what the phone demo can and can't do.
+
+## Run locally
+
+Use **Node 22** and **pnpm 10.0.0**. The pnpm version is pinned in `package.json`. Development uses pnpm workspaces and Turborepo; no local Docker setup is required.
+
+```sh
+git clone [https://github.com/opencore-x/opensociety.git](https://github.com/opencore-x/opensociety.git)
+cd opensociety
+pnpm install --frozen-lockfile
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env
+
+```
+
+Set `DATABASE_URL` in `apps/api/.env` to a development Neon database and configure matching Clerk credentials in the API and web env files. R2 credentials are needed to exercise uploads. The example database URL is a placeholder.
+
+Supply the same development `DATABASE_URL` in your shell before applying the checked-in migrations. The database CLI does not load `apps/api/.env` automatically:
+
+```sh
+pnpm --filter @opensociety/db db:migrate
+pnpm dev
+
+```
+
+Open **http://localhost:3000/admin**. The Node API runs on **http://localhost:8787**. Turborepo builds shared packages before startup and rebuilds affected workspace dependencies as files change.
+
+For a local demo without Clerk, leave Clerk credentials unset, run `pnpm --filter @opensociety/db db:seed` with the development `DATABASE_URL` in your shell, and set `VITE_DEV_USER_ID=00000000-0000-0000-0000-000000000001` in `apps/web/.env` before starting the app. This seeds a development admin and sample community. Keep development identities and seed data out of deployed environments.
+
+For the Workers adapter, use `pnpm --filter @opensociety/api dev:worker` and keep local secrets in `apps/api/.dev.vars`. The default `pnpm dev` uses the Node adapter and `.env` files.
+
+To run the iPhone or Android app, follow [mobile development](docs/mobile.md#local-development) for API addresses, environment variables, and native builds.
+
+## How it is built
+
+| Part | Stack | Location |
+| --- | --- | --- |
+| Mobile app | Expo Router, React Native, TanStack Query | [`apps/mobile`](apps/mobile) |
+| Admin dashboard | TanStack Start, React, shadcn/ui | [`apps/web`](apps/web) |
+| API | Hono on Node 22; Cloudflare Workers adapter also available | [`apps/api`](apps/api) |
+| Database | Neon Postgres and Drizzle ORM | [`packages/db`](packages/db) |
+| Shared contracts | Zod schemas and translations | [`packages/shared`](packages/shared) |
+
+Clerk authenticates web and mobile sessions; the API maps them to local users and permissions. Each society has a separate API and database with a single society configuration. Cloudflare R2 stores photos and documents, and Expo Push handles mobile notifications. The [deployment guide](deploy/README.md) covers the Node hosting setup, scheduled jobs, migrations, and rollback.
+
+## Contributing
+
+Bug reports, usability feedback, documentation improvements, and focused pull requests are welcome. [Open an issue](https://github.com/opencore-x/opensociety/issues) with the affected flow, expected behaviour, and reproduction steps. For mobile layout issues, include the platform, screen size, and system text size; use fictional data in screenshots.
+
+Before opening a code PR, run the workspace checks:
+
+```sh
+pnpm build
+pnpm check-types
+pnpm lint
+pnpm test
+
+```
+
+CI runs these checks and builds and smoke-tests the hosting containers. For mobile UI changes, also review the app on both native platforms; a browser preview alone does not establish native layout quality.
+
+* [Mobile design and component guidance](apps/mobile/components/README.md)
+* [Mobile development, builds, and push notifications](docs/mobile.md)
+* [Deployment and operations](deploy/README.md)
+* [Database schema](packages/db/schema.dbml) and [migrations](packages/db/drizzle)
+* [Screenshot provenance and refresh guidance](docs/screenshots/README.md)
+
+=== ROOT PACKAGE.JSON ===
+{
+"name": "opensociety",
+"version": "0.0.0",
+"private": true,
+"license": "MIT",
+"scripts": {
+"build": "turbo run build",
+"dev": "turbo watch dev",
+"lint": "turbo run lint",
+"format": "prettier --write .",
+"check-types": "turbo run check-types",
+"test": "turbo run test"
+},
+"devDependencies": {
+"prettier": "^3.8.0",
+"turbo": "^2.7.5"
+},
+"packageManager": "pnpm@10.0.0",
+"engines": {
+"node": ">=18"
+},
+"pnpm": {
+"onlyBuiltDependencies": [
+"esbuild",
+"@tailwindcss/oxide",
+"workerd"
+],
+"overrides": {
+"lightningcss": "1.30.1",
+"react-native-worklets": "0.10.1"
+}
+}
+}
+
+=== API PACKAGE.JSON ===
+{
+"name": "@opensociety/api",
+"version": "0.0.0",
+"private": true,
+"type": "module",
+"scripts": {
+"dev": "tsx --env-file-if-exists=.env src/node/server.ts",
+"deploy": "wrangler deploy",
+"build": "tsc --noEmit",
+"check-types": "tsc --noEmit",
+"lint": "eslint .",
+"test": "vitest run",
+"build:node": "node build-node.mjs",
+"start": "node dist/node.mjs",
+"dev:worker": "wrangler dev"
+},
+"dependencies": {
+"@aws-sdk/client-s3": "^3.1145.0",
+"@clerk/backend": "^1.21.0",
+"@hono/node-server": "^2.1.3",
+"@hono/zod-validator": "^0.4.2",
+"@opensociety/db": "workspace:*",
+"@opensociety/shared": "workspace:*",
+"drizzle-orm": "^0.39.1",
+"hono": "^4.10.1",
+"pdf-lib": "^1.17.1",
+"svix": "^1.42.0",
+"zod": "^3.24.1"
+},
+"devDependencies": {
+"@cloudflare/workers-types": "^4.20240512.0",
+"@electric-sql/pglite": "^0.5.8",
+"@opensociety/eslint-config": "workspace:*",
+"@types/node": "^22.10.2",
+"esbuild": "^0.28.2",
+"eslint": "^9.18.0",
+"tsx": "^4.19.2",
+"typescript": "^5.7.2",
+"vitest": "^3.0.5",
+"wrangler": "^3.99.0"
+}
+}
+
+=== WEB PACKAGE.JSON ===
+{
+"name": "@opensociety/web",
+"private": true,
+"type": "module",
+"scripts": {
+"dev": "vite dev --port 3000",
+"build": "vite build",
+"check-types": "tsc --noEmit",
+"lint": "eslint .",
+"preview": "vite preview",
+"test": "vitest run",
+"start": "node server.mjs"
+},
+"dependencies": {
+"@clerk/tanstack-react-start": "^1.4.12",
+"@hono/node-server": "^2.1.3",
+"@opensociety/shared": "workspace:*",
+"@radix-ui/react-label": "^2.1.2",
+"@radix-ui/react-select": "^2.1.6",
+"@radix-ui/react-slot": "^1.1.2",
+"@tailwindcss/vite": "^4.1.18",
+"@tanstack/react-devtools": "^0.7.0",
+"@tanstack/react-query": "^5.66.0",
+"@tanstack/react-router": "^1.132.0",
+"@tanstack/react-router-devtools": "^1.132.0",
+"@tanstack/react-router-ssr-query": "^1.131.7",
+"@tanstack/react-start": "^1.132.0",
+"@tanstack/router-plugin": "^1.132.0",
+"class-variance-authority": "^0.7.1",
+"clsx": "^2.1.1",
+"hono": "^4.10.1",
+"lucide-react": "^0.545.0",
+"react": "^19.2.0",
+"react-dom": "^19.2.0",
+"pdf-lib": "^1.17.1",
+"react-qr-code": "^2.2.0",
+"tailwind-merge": "^3.0.1",
+"tailwindcss": "^4.1.18",
+"tw-animate-css": "^1.2.5",
+"vite-tsconfig-paths": "^5.1.4"
+},
+"devDependencies": {
+"@opensociety/eslint-config": "workspace:*",
+"@tanstack/devtools-vite": "^0.3.11",
+"@testing-library/dom": "^10.4.0",
+"@testing-library/react": "^16.2.0",
+"@types/node": "^22.10.2",
+"@types/react": "^19.2.0",
+"@types/react-dom": "^19.2.0",
+"@vitejs/plugin-react": "^5.0.4",
+"eslint": "^9.18.0",
+"jsdom": "^27.0.0",
+"typescript": "^5.7.2",
+"vite": "^7.1.7",
+"vitest": "^3.0.5"
+}
+}
+
+=== MOBILE PACKAGE.JSON ===
+{
+"name": "@opensociety/mobile",
+"version": "0.0.0",
+"main": "expo-router/entry",
+"scripts": {
+"start": "expo start",
+"android": "expo start --android",
+"ios": "expo start --ios",
+"web": "expo start --web",
+"check-types": "tsc --noEmit",
+"lint": "eslint .",
+"eas-build-post-install": "pnpm --filter @opensociety/shared build",
+"test": "vitest run lib && node --test scripts/*.test.cjs"
+},
+"dependencies": {
+"@clerk/clerk-expo": "^2.19.31",
+"@expo/dom-webview": "~57.0.1",
+"@expo/metro-runtime": "~57.0.16",
+"@opensociety/shared": "workspace:*",
+"@react-native-async-storage/async-storage": "2.2.0",
+"@tanstack/query-async-storage-persister": "^5.66.0",
+"@tanstack/react-query": "^5.101.2",
+"@tanstack/react-query-persist-client": "^5.66.0",
+"class-variance-authority": "^0.7.1",
+"clsx": "^2.1.1",
+"expo": "~57.0.26",
+"expo-auth-session": "~57.0.13",
+"expo-camera": "~57.0.6",
+"expo-constants": "~57.0.20",
+"expo-crypto": "~57.0.3",
+"expo-dev-client": "~57.0.19",
+"expo-linking": "~57.0.11",
+"expo-network": "~57.0.2",
+"expo-notifications": "~57.0.21",
+"expo-router": "~57.0.24",
+"expo-secure-store": "~57.0.4",
+"expo-splash-screen": "~57.0.9",
+"expo-status-bar": "~57.0.1",
+"expo-web-browser": "~57.0.3",
+"nativewind": "5.0.0-preview.4",
+"react": "19.2.3",
+"react-dom": "19.2.3",
+"react-native": "0.86.3",
+"react-native-css": "^3.0.7",
+"react-native-qrcode-svg": "^6.3.21",
+"react-native-reanimated": "4.5.1",
+"react-native-safe-area-context": "~5.7.0",
+"react-native-screens": "~4.26.2",
+"react-native-svg": "15.15.4",
+"react-native-web": "^0.21.0",
+"react-native-worklets": "0.10.1",
+"tailwind-merge": "^3.0.1"
+},
+"devDependencies": {
+"@tailwindcss/postcss": "^4.3.2",
+"@types/node": "^22.10.2",
+"@types/react": "~19.2.14",
+"eslint": "^9.18.0",
+"eslint-config-expo": "~57.0.2",
+"lightningcss": "1.30.1",
+"postcss": "^8.5.19",
+"tailwindcss": "^4.1.18",
+"typescript": "~6.0.3",
+"vitest": "^3.0.5"
+},
+"private": true
+}
+
+```
+
+
+
+```python?code_reference&code_event_index=3
+print("=== SCHEMA.DBML ===")
+print(read_file('/tmp/opensociety_extracted/opensociety/packages/db/schema.dbml', 25000))
+
+
+```
+
+```text
+=== SCHEMA.DBML ===
+// OpenSociety Database Schema
+// Last updated: 2026-06-28
+// Auth: Clerk (authn-only) — identity/credentials live in Clerk; we mirror profile + role locally.
+// Tenancy: SINGLE-TENANT per society (one DB per society). Use society_config (1 row); no society_id on tables.
+
+Project opensociety {
+  database_type: 'PostgreSQL'
+  Note: 'Open-source society management platform'
+}
+
+// ===== Core Identity & Authentication =====
+
+Table users {
+  id uuid [pk]
+  clerk_id varchar(255) [unique, not null]
+  phone varchar(10) [unique]
+  email varchar(100) [unique]
+  first_name varchar(50) [not null]
+  last_name varchar(50) [not null]
+  role user_role [not null, default: 'RESIDENT']
+  status user_status [not null, default: 'PENDING']
+  is_active boolean [default: true]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    clerk_id
+    phone
+    email
+    (role, is_active)
+  }
+
+  Note: 'Local mirror of Clerk-authenticated users. clerk_id links to Clerk identity. status gates app access until an admin approves and assigns a residency.'
+}
+
+Enum user_status {
+  PENDING
+  APPROVED
+  SUSPENDED
+}
+
+Enum user_role {
+  RESIDENT
+  GUARD
+  ADMIN
+  STAFF
+}
+
+// ===== Physical Infrastructure =====
+
+Table apartments {
+  id uuid [pk]
+  tower varchar(50) [not null]
+  apartment_no varchar(20) [not null]
+  floor integer
+  bhk_type bhk_type
+  carpet_area integer
+  is_active boolean [default: true]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (tower, apartment_no) [unique]
+  }
+
+  Note: 'Physical apartment units in the society'
+}
+
+Enum bhk_type {
+  "1BHK"
+  "2BHK"
+  "3BHK"
+  "4BHK"
+  VILLA
+  OTHER
+}
+
+// ===== Relationships =====
+
+Table residencies {
+  id uuid [pk]
+  user_id uuid [ref: > users.id, not null]
+  apartment_id uuid [ref: > apartments.id, not null]
+  residency_type residency_type [not null]
+  relation_to_owner varchar(50)
+  start_date date [not null]
+  end_date date
+  is_emergency_contact boolean [default: false]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (apartment_id, end_date)
+    user_id
+  }
+
+  Note: 'Links users to apartments with roles. Handles owners, tenants, family members.'
+}
+
+Enum residency_type {
+  OWNER
+  TENANT
+  FAMILY_MEMBER
+}
+
+// ===== Security Personnel =====
+
+Table guards {
+  id uuid [pk]
+  user_id uuid [ref: > users.id, not null]
+  assigned_tower varchar(50)
+  contract_agency varchar(100)
+  shift_timing shift_timing
+  joining_date date
+  exit_date date
+  is_active boolean [default: true]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    user_id
+    (is_active, assigned_tower)
+  }
+
+  Note: 'Security guards. All guards must have user account for single sign-in app. Name/phone stored in users table.'
+}
+
+Enum shift_timing {
+  MORNING
+  EVENING
+  NIGHT
+  ROTATING
+}
+
+// ===== House Help Management =====
+
+Table house_helps {
+  id uuid [pk]
+  first_name varchar(50) [not null]
+  last_name varchar(50) [not null]
+  phone varchar(10) [not null]
+  gender gender
+  photo_url text
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    phone
+  }
+
+  Note: 'Domestic workers (maids, cooks, drivers) registered with society'
+}
+
+Enum gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+Table house_help_assignments {
+  id uuid [pk]
+  house_help_id uuid [ref: > house_helps.id, not null]
+  apartment_id uuid [ref: > apartments.id, not null]
+  duties duty_type[]
+  working_days weekday[]
+  start_time time
+  end_time time
+  start_date date [not null]
+  end_date date
+  is_active boolean [default: true]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (house_help_id, apartment_id)
+    apartment_id
+  }
+
+  Note: 'Junction table linking house help to apartments they work at'
+}
+
+Enum duty_type {
+  CLEANING
+  COOKING
+  DISHWASHING
+  DUSTING
+  LAUNDRY
+  OTHER
+}
+
+Enum weekday {
+  MON
+  TUE
+  WED
+  THU
+  FRI
+  SAT
+  SUN
+}
+
+// ===== Visitor Management (Core Feature) =====
+
+Table visitor_entries {
+  id uuid [pk]
+  apartment_id uuid [ref: > apartments.id, not null]
+
+  // Visitor details
+  visitor_name varchar(100) [not null]
+  visitor_phone varchar(10)
+  visitor_photo_url text
+  purpose_of_visit visit_purpose [not null]
+  purpose_details text
+
+  // Vehicle
+  has_vehicle boolean [default: false]
+  vehicle_type vehicle_type
+  vehicle_number varchar(20)
+
+  // Pre-approval link
+  pre_approval_id uuid [ref: > visitor_pre_approvals.id]
+
+  // Workflow
+  status entry_status [not null, default: 'PENDING']
+  approved_by uuid [ref: > users.id]
+  denied_reason text
+
+  // Guard tracking
+  check_in_by uuid [ref: > guards.id]
+  check_out_by uuid [ref: > guards.id]
+
+  // Timestamps
+  request_time timestamp [default: `now()`]
+  approval_time timestamp
+  check_in_time timestamp
+  check_out_time timestamp
+  expected_checkout_time timestamp
+
+  notes text
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (apartment_id, status, request_time)
+    (status, request_time)
+    (check_in_time, status)
+    pre_approval_id
+  }
+
+  Note: 'Core table for visitor entry/exit workflow and approvals'
+}
+
+Table visitor_pre_approvals {
+  id uuid [pk]
+  apartment_id uuid [ref: > apartments.id, not null]
+  created_by uuid [ref: > users.id, not null]
+
+  visitor_name varchar(100)
+  visitor_phone varchar(10)
+
+  purpose_of_visit visit_purpose [not null]
+  purpose_details text
+
+  approval_code varchar(6) [unique, not null]
+  qr_code_data text [unique, not null]
+
+  valid_from timestamp [default: `now()`]
+  valid_until timestamp [not null]
+
+  status pre_approval_status [default: 'ACTIVE']
+  used_at timestamp
+  used_by uuid [ref: > guards.id]
+  visitor_entry_id uuid [ref: > visitor_entries.id]
+
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (approval_code, status)
+    (qr_code_data, status)
+    (apartment_id, status, valid_until)
+    (status, valid_until)
+  }
+
+  Note: 'Temporary approval tokens (QR/OTP) for pre-approved visitors. See workflows/pre-approved-visitors.md'
+}
+
+Enum visit_purpose {
+  FRIEND
+  FAMILY
+  DELIVERY
+  MAINTENANCE
+  VENDOR
+  OTHER
+}
+
+Enum entry_status {
+  PENDING
+  APPROVED
+  DENIED
+  ENTERED
+  EXITED
+  CANCELLED
+}
+
+Enum pre_approval_status {
+  ACTIVE
+  USED
+  EXPIRED
+  CANCELLED
+}
+
+Enum vehicle_type {
+  CAR
+  BIKE
+  SCOOTER
+  BICYCLE
+  AUTO
+  TRUCK
+  OTHER
+}
+
+// ===== Vehicle Management =====
+
+Table vehicles {
+  id uuid [pk]
+  apartment_id uuid [ref: > apartments.id, not null]
+  vehicle_number varchar(20) [unique, not null]
+  vehicle_type vehicle_type [not null]
+  manufacturer varchar(50)
+  model varchar(50)
+  color varchar(30)
+  primary_driver uuid [ref: > users.id]
+  is_active boolean [default: true]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    vehicle_number
+    apartment_id
+  }
+
+  Note: 'Vehicles registered to apartments. Linked to apartment (not user) as parking is apartment property.'
+}
+
+// ===== Parking Management =====
+
+Table parking_slots {
+  id uuid [pk]
+  slot_number varchar(20) [unique, not null]
+  slot_type parking_type [not null]
+  tower varchar(50)
+  floor integer
+  apartment_id uuid [ref: > apartments.id]
+  is_occupied boolean [default: false]
+  is_active boolean [default: true]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (slot_type, is_occupied)
+  }
+
+  Note: 'Parking slot allocation and management'
+}
+
+Enum parking_type {
+  COVERED
+  OPEN
+  VISITOR
+  TWO_WHEELER
+  FOUR_WHEELER
+}
+
+// ===== Communication =====
+
+Table notices {
+  id uuid [pk]
+  title varchar(200) [not null]
+  content text [not null]
+  priority notice_priority [default: 'NORMAL']
+  category notice_category [not null]
+
+  // Targeting
+  target_audience notice_audience [default: 'ALL']
+  target_tower varchar(50)
+
+  // Attachments
+  attachment_urls text[]
+
+  // Publishing
+  published_by uuid [ref: > users.id, not null]
+  published_at timestamp [default: `now()`]
+  expires_at timestamp
+
+  is_active boolean [default: true]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (published_at, is_active)
+    (priority, published_at)
+  }
+
+  Note: 'Society announcements and notices'
+}
+
+Enum notice_priority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+Enum notice_category {
+  GENERAL
+  MAINTENANCE
+  EVENT
+  EMERGENCY
+  MEETING
+  FINANCIAL
+  OTHER
+}
+
+Enum notice_audience {
+  ALL
+  TOWER_SPECIFIC
+  OWNERS
+  TENANTS
+}
+
+Table notice_read_receipts {
+  id uuid [pk]
+  notice_id uuid [ref: > notices.id, not null]
+  user_id uuid [ref: > users.id, not null]
+  read_at timestamp [default: `now()`]
+
+  indexes {
+    (notice_id, user_id) [unique]
+    notice_id
+  }
+
+  Note: 'Track which residents have read which notices'
+}
+
+// ===== Maintenance Management =====
+
+Table maintenance_tickets {
+  id uuid [pk]
+  apartment_id uuid [ref: > apartments.id, not null]
+  reported_by uuid [ref: > users.id, not null]
+
+  category maintenance_category [not null]
+  title varchar(200) [not null]
+  description text [not null]
+  priority ticket_priority [default: 'MEDIUM']
+
+  status ticket_status [default: 'OPEN']
+  assigned_to uuid [ref: > users.id]
+
+  attachment_urls text[]
+
+  reported_at timestamp [default: `now()`]
+  assigned_at timestamp
+  resolved_at timestamp
+  closed_at timestamp
+
+  resolution_notes text
+
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (status, priority, reported_at)
+    (apartment_id, status)
+  }
+
+  Note: 'Resident-reported maintenance issues and tracking'
+}
+
+Enum maintenance_category {
+  ELECTRICAL
+  PLUMBING
+  CARPENTRY
+  PAINTING
+  CIVIL
+  OTHER
+}
+
+Enum ticket_priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+Enum ticket_status {
+  OPEN
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  CANCELLED
+}
+
+// ===== System Configuration =====
+
+Table society_config {
+  id uuid [pk]
+  society_name varchar(200) [not null]
+  address text
+  city varchar(100)
+  state varchar(100)
+  pincode varchar(6)
+
+  total_towers integer
+  total_apartments integer
+
+  // Contact
+  admin_phone varchar(10)
+  admin_email varchar(100)
+  emergency_contact varchar(10)
+
+  // Feature flags
+  enable_visitor_approval boolean [default: true]
+  enable_notice_board boolean [default: true]
+  enable_maintenance_tickets boolean [default: true]
+  enable_parking boolean [default: false]
+
+  // Visitor settings
+  auto_approve_delivery boolean [default: false]
+  max_visit_duration_hours integer [default: 24]
+
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  Note: 'Society-wide configuration and settings (single row table)'
+}
+
+// ===== RBAC System =====
+
+Table roles {
+  id uuid [pk]
+  name varchar(50) [unique, not null]
+  display_name varchar(100) [not null]
+  description text
+  is_system_role boolean [default: false]
+  is_active boolean [default: true]
+  created_by uuid [ref: > users.id]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    name [unique]
+    is_system_role
+  }
+
+  Note: 'System and custom roles for RBAC. System roles (super_admin, admin, security, staff, resident) cannot be deleted.'
+}
+
+Table permissions {
+  id uuid [pk]
+  role_id uuid [ref: > roles.id, not null]
+  module permission_module [not null]
+  operation permission_operation [not null]
+  created_at timestamp [default: `now()`]
+
+  indexes {
+    (role_id, module, operation) [unique]
+    role_id
+  }
+
+  Note: 'Granular permissions per role'
+}
+
+Enum permission_module {
+  APARTMENTS
+  RESIDENTS
+  VISITORS
+  HOUSE_HELPS
+  VEHICLES
+  PARKING
+  NOTICES
+  MAINTENANCE
+  REPORTS
+  SETTINGS
+  USERS
+  ROLES
+}
+
+Enum permission_operation {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  EXPORT
+}
+
+Table user_roles {
+  id uuid [pk]
+  user_id uuid [ref: > users.id, not null]
+  role_id uuid [ref: > roles.id, not null]
+  assigned_by uuid [ref: > users.id, not null]
+  assigned_at timestamp [default: `now()`]
+
+  indexes {
+    (user_id, role_id) [unique]
+    user_id
+    role_id
+  }
+
+  Note: 'Link users to roles. A user can have multiple roles (e.g., resident + admin).'
+}
+
+// ===== House Help Ratings & Verification =====
+
+Table house_help_ratings {
+  id uuid [pk]
+  house_help_id uuid [ref: > house_helps.id, not null]
+  apartment_id uuid [ref: > apartments.id, not null]
+  rated_by uuid [ref: > users.id, not null]
+  rating integer [not null]
+  review_text text
+  is_anonymous boolean [default: true]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (house_help_id, rating)
+    apartment_id
+    (house_help_id, apartment_id) [unique]
+  }
+
+  Note: 'Ratings (1-5 stars) and reviews for house help from residents. One rating per apartment.'
+}
+
+Table verification_documents {
+  id uuid [pk]
+  house_help_id uuid [ref: > house_helps.id, not null]
+  document_type document_type [not null]
+  document_number varchar(50)
+  document_url text
+  verified_by uuid [ref: > users.id]
+  verified_at timestamp
+  expires_at date
+  status verification_status [default: 'PENDING']
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    house_help_id
+    (status, verified_at)
+  }
+
+  Note: 'Police verification and identity documents for house help'
+}
+
+Enum document_type {
+  AADHAAR
+  PAN_CARD
+  POLICE_VERIFICATION
+  ADDRESS_PROOF
+  REFERENCE_LETTER
+  OTHER
+}
+
+Enum verification_status {
+  PENDING
+  VERIFIED
+  REJECTED
+  EXPIRED
+}
+
+Table house_help_entry_logs {
+  id uuid [pk]
+  house_help_id uuid [ref: > house_helps.id, not null]
+  apartment_id uuid [ref: > apartments.id, not null]
+  check_in_by uuid [ref: > guards.id, not null]
+  check_out_by uuid [ref: > guards.id]
+  check_in_time timestamp [not null]
+  check_out_time timestamp
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (house_help_id, check_in_time)
+    (apartment_id, check_in_time)
+    (check_in_time, check_out_time)
+  }
+
+  Note: 'Entry and exit tracking for house help. Separate from visitor_entries due to high volume.'
+}
+
+// ===== Device Management =====
+
+Table device_registrations {
+  id uuid [pk]
+  user_id uuid [ref: > users.id, not null]
+  device_token varchar(255) [unique, not null]
+  device_type device_type [not null]
+  device_name varchar(100)
+  platform platform [not null]
+  app_version varchar(20)
+  is_active boolean [default: true]
+  last_used_at timestamp
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    device_token [unique]
+    user_id
+    (user_id, is_active)
+  }
+
+  Note: 'Track devices for push notifications and security. Limit 3 devices per user.'
+}
+
+Enum device_type {
+  GATE_PHONE
+  PERSONAL_PHONE
+  TABLET
+}
+
+Enum platform {
+  ANDROID
+  IOS
+}
+
+Table shift_logs {
+  id uuid [pk]
+  gate_user_id uuid [ref: > users.id, not null]
+  guard_name varchar(100) [not null]
+  guard_phone varchar(10)
+  shift_start timestamp [not null]
+  shift_end timestamp
+  signed_out_by uuid [ref: > users.id]
+  created_at timestamp [default: `now()`]
+
+  indexes {
+    (gate_user_id, shift_start)
+    (shift_start, shift_end)
+  }
+
+  Note: 'Optional: Track which guard worked which shift on shared gate accounts for accountability'
+}
+
+// ===== Onboarding & Import =====
+
+Table bulk_import_logs {
+  id uuid [pk]
+  imported_by uuid [ref: > users.id, not null]
+  import_type import_type [not null]
+  file_name varchar(200)
+  total_rows integer [not null]
+  successful_rows integer [not null]
+  failed_rows integer [not null]
+  error_details jsonb
+  status import_status [default: 'IN_PROGRESS']
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  indexes {
+    (imported_by, created_at)
+    (import_type, status)
+  }
+
+  Note: 'Track bulk imports (CSV, pattern-based) for apartments, residents, vehicles. Enables audit and rollback.'
+}
+
+Enum import_type {
+  APARTMENTS
+  RESIDENTS
+  VEHICLES
+  HOUSE_HELPS
+}
+
+Enum import_status {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  ROLLED_BACK
+}
+
+// ===== Audit & Compliance =====
+
+Table audit_logs {
+  id uuid [pk]
+  user_id uuid [ref: > users.id]
+  action varchar(200) [not null]
+  entity_type varchar(50) [not null]
+  entity_id uuid [not null]
+  changes jsonb
+  ip_address varchar(45)
+  user_agent text
+  created_at timestamp [default: `now()`]
+
+  indexes {
+    (user_id, created_at)
+    (entity_type, entity_id)
+    (action, created_at)
+  }
+
+  Note: 'Audit trail for security-sensitive operations'
+}
+
+// ===== Push delivery (implemented in migration 0023) =====
+
+Table push_devices {
+  token text [pk]
+  user_id uuid [not null, ref: > users.id]
+  platform text [not null]
+  updated_at timestamp [not null, default: `now()`]
+  indexes { user_id }
+}
+
+Table push_deliveries {
+  id uuid [pk, default: `gen_random_uuid()`]
+  token text [not null, ref: > push_devices.token]
+  user_id uuid [not null, ref: > users.id]
+  event_key text [not null]
+  message jsonb [not null]
+  status text [not null, default: 'queued', note: 'queued, sending, receipt, delivered, failed']
+  ticket_id text
+  attempts integer [not null, default: 0]
+  next_attempt_at timestamp [not null, default: `now()`]
+  expires_at timestamp [not null]
+  last_error text
+  created_at timestamp [not null, default: `now()`]
+  indexes {
+    (event_key, token) [unique]
+    (status, next_attempt_at)
+  }
+}
+
+
+
+```
+
+```python
+import glob
+
+print("=== DB SCHEMA FILES ===")
+for f in sorted(glob.glob('/tmp/opensociety_extracted/opensociety/packages/db/src/schema/*.ts')):
+    print("FILE:", os.path.basename(f))
+    print(read_file(f, 3000))
+    print("-" * 40)
+
+
+```
+
+```text
+=== DB SCHEMA FILES ===
+FILE: apartments.ts
+import { pgTable, uuid, text, integer, timestamp, boolean, unique } from 'drizzle-orm/pg-core'
+import { bhkType } from './enums'
+
+// Single-tenant: no society_id — all apartments belong to this instance's society.
+export const apartments = pgTable(
+  'apartments',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    tower: text('tower').notNull(),
+    apartmentNo: text('apartment_no').notNull(),
+    floor: integer('floor'),
+    bhkType: bhkType('bhk_type'),
+    isActive: boolean('is_active').notNull().default(true),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [unique('apartments_tower_apartment_no_unique').on(t.tower, t.apartmentNo)],
+)
+
+----------------------------------------
+FILE: bill-config.ts
+import { pgTable, uuid, integer, jsonb, timestamp, boolean } from 'drizzle-orm/pg-core'
+import { users } from './users'
+
+// Singleton recurring-bill template used by the monthly auto-generation cron.
+// lineItems is the set of charges applied to every flat (amounts in paise, GST%);
+// dueDayOfMonth sets each bill's due date within the billing month.
+
+export const billConfig = pgTable('bill_config', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  dueDayOfMonth: integer('due_day_of_month').notNull().default(10),
+  lineItems: jsonb('line_items')
+    .$type<{ description: string; amount: number; taxRatePct: number; accountId?: string }[]>()
+    .notNull()
+    .default([]),
+  // Interest on arrears (#95). Opt-in, simple (not compound), waivable. Rate is
+  // an annual percent capped by the society's registered bye-laws (Bye-law 71).
+  interestEnabled: boolean('interest_enabled').notNull().default(false),
+  interestRatePct: integer('interest_rate_pct').notNull().default(18),
+  gracePeriodDays: integer('grace_period_days').notNull().default(15),
+  updatedBy: uuid('updated_by').references(() => users.id),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+----------------------------------------
+FILE: enums.ts
+import { pgEnum } from 'drizzle-orm/pg-core'
+
+export const userRole = pgEnum('user_role', ['RESIDENT', 'GUARD', 'ADMIN', 'STAFF'])
+export const userStatus = pgEnum('user_status', ['PENDING', 'APPROVED', 'SUSPENDED'])
+export const residencyRelation = pgEnum('residency_relation', ['OWNER', 'TENANT', 'FAMILY'])
+export const bhkType = pgEnum('bhk_type', ['STUDIO', '1BHK', '2BHK', '3BHK', '4BHK', '5BHK', 'PENTHOUSE'])
+export const visitorType = pgEnum('visitor_type', ['GUEST', 'DELIVERY', 'SERVICE', 'CAB', 'OTHER'])
+export const visitorStatus = pgEnum('visitor_status', [
+  'PENDING',
+  'APPROVED',
+  'DENIED',
+  'ENTERED',
+  'EXITED',
+  'CANCELLED',
+  'EXPIRED',
+])
+export const preApprovalType = pgEnum('pre_approval_type', ['ALWAYS', 'SCHEDULED', 'ONE_TIME'])
+export const noticePriority = pgEnum('notice_priority', ['LOW', 'NORMAL', 'HIGH', 'URGENT'])
+export const noticeCategory = pgEnum('notice_category', [
+  'GENERAL',
+  'MAINTENANCE',
+  'EVENT',
+  'SECURITY',
+  'BILLING',
+  'EMERGENCY',
+])
+export const ticketStatus = pgEnum('ticket_status', [
+  'OPEN',
+  'IN_PROGRESS',
+  'RESOLVED',
+  'CLOSED',
+  'CANCELLED',
+])
+export const ticketCategory = pgEnum('ticket_category', [
+  'PLUMBING',
+  'ELECTRICAL',
+  'CARPENTRY',
+  'HOUSEKEEPING',
+  'SECURITY',
+  'OTHER',
+])
+export const ticketPriority = pgEnum('ticket_priority', ['LOW', 'NORMAL', 'HIGH', 'URGENT'])
+export const houseHelpType = pgEnum('house_help_type', [
+  'MAID',
+  'COOK',
+  'DRIVER',
+  'NANNY',
+  'GARDENER',
+  'CARETAKER',
+  'OTHER',
+])
+export const idProofType = pgEnum('id_proof_type', [
+  'AADHAAR',
+  'PAN',
+  'VOTER_ID',
+  'DRIVING_LICENSE',
+  'PASSPORT',
+  'OTHER',
+])
+export const vehicleType = pgEnum('vehicle_type', ['CAR', 'BIKE', 'SCOOTER', 'BICYCLE', 'OTHER'])
+export const parkingSlotType = pgEnum('parking_slot_type', ['COVERED', 'OPEN'])
+export const backgroundCheckStatus = pgEnum('background_check_status', ['PENDING', 'CLEARED', 'FLAGGED'])
+export const billType = pgEnum('bill_type', ['MONTHLY', 'ONE_TIME'])
+export const billStatus = pgEnum('bill_status', ['ISSUED', 'PARTIALLY_PAID', 'PAID', 'CANCELLED'])
+export const paymentMethod = pgEnum('payment_method', ['CASH', 'CHEQUE', 'UPI', 'BANK_TRANSFER', 'ONLINE'])
+
+// Double-entry ledger (#97). FUND = corpus/sinking/reserve (equity-like for a
+// non-profit society).
+export const accountType = pgEnum('account_type', ['ASSET', 'LIABILITY', 'INCOME', 'EXPENSE', 'FUND'])
+export const journalSource = pgEnum('journal_source', [
+  'BILL',
+  'PAYMENT',
+  'EXPENSE',
+  'INTEREST',
+  'WAIVER',
+  'MANUAL',
+  'OPENING',
+  'ADJUSTMENT',
+])
+
+// Expense & vendor management (#94). TDS sections per the Income Tax Act;
+// thresholds/rates are set by annual Finance Acts, so rates are parameterized on
+// the entry, never hardcoded.
+export const tdsSection = pgEnum('tds_section', ['SEC_194C', 'SEC_194J', 'SEC_194I'])
+export const expenseStatus = pgEnum('expense_status', ['PAID', 'PAYABLE'])
+
+----------------------------------------
+FILE: expenses.ts
+import { pgTable, uuid, text, integer, boolean, timestamp, index } from 'drizzle-orm/pg-core'
+import { users } from './users'
+import { accounts } from './ledger'
+import { paymentMethod, tdsSection, expenseStatus } from './enums'
+
+// Expense & vendor side of finance (#94). All money is integer paise. Expenses
+// post to the ledger against an EXPENSE head (accounts) — see lib/ledger-posting.
+
+// Suppliers/contractors the society pays. PAN/GSTIN drive TDS + GST reporting.
+export const vendors = pgTable('vendors', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  category: text('category'),
+  pan: text('pan'),
+  gstin: text('gstin'),
+  contact: text('contact'),
+  bankAccount: text('bank_account'),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+// A recorded expense. `amount` is the base (pre-GST, pre-TDS) value; `taxAmount`
+// is input GST (booked as cost — ITC deferred). PAYABLE = booked but unpaid
+// (sits in Vendor Payables); PAID = settled from bank/cash.
+export const expenses = pgTable(
+  'expenses',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    vendorId: uuid('vendor_id').references(() => vendors.id), // null = petty cash
+    accountId: uuid('account_id')
+      .notNull()
+      .references(() => accounts.id), // the EXPENSE head debited
+    amount: integer('amount').notNull(), // base paise, before GST/TDS
+    taxAmount: integer('tax_amount').notNull().default(0), // input GST
+    status: expenseStatus('status').notNull().default('PAID'),
+    description: text('description').notNull(),
+    billRef: text('bill_ref'),
+    method: paymentMethod('method'), // null when PAYABLE
+    paidAt: timestamp('paid_at'),
+    attachmentUrl: text('attachment_url'),
+    recordedBy: uuid('recorded_by').references(() => users.id),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => [
+    index('expenses_account_id_idx').on(t.accountId),
+    index('expenses_vendor_id_idx').on(t.vendorId),
+    index('expenses_created_at_idx').on(t.createdAt),
+  ],
+)
+
+// TDS withheld on an expense (capture + report only; filing is out of scope).
+export const tdsEntries = pgTable(
+  'tds_entries',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    expenseId: uuid('expense_id')
+      .notNull()
+      .references(() => expenses.id),
+    section: tdsSection('section').notNull(),
+    ratePct: integer('rate_pct').notNull(),
+    amount: integer('amount').notNull(), // TDS paise
+    deductedAt: timestamp('deducted_at').defaultNow().notNull(),
+  },
+  (t) => [index('tds_entries_expense_id_idx').on(t.expenseId), index('tds_entries_section_idx').on(t.section)],
+)
+
+----------------------------------------
+FILE: finance.ts
+import { pgTable, uuid, text, integer, timestamp, index, uniqueIndex } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import { apartments } from './apartments'
+import { users } from './users'
+import { accounts } from './ledger'
+import { billType, billStatus, paymentMethod } from './enums'
+
+// All money is stored as an integer number of paise (₹1 = 100 paise) so
+// arithmetic (GST, part-payments, dues) stays exact.
+
+// A maintenance bill for one apartment — monthly recurring or a one-time charge.
+// subtotal/taxAmount/totalAmount are denormalized sums of its line items.
+export const maintenanceBills = pgTable('maintenance_bills', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  apartmentId: uuid('apartment_id')
+    .notNull()
+    .references(() => apartments.id),
+  type: billType('type').notNull().default('MONTHLY'),
+  title: text('title').notNull(),
+  periodMonth: text('period_month'), // 'YYYY-MM' for recurring; null for one-time
+  subtotal: integer('subtotal').notNull().default(0),
+  taxAmount: integer('tax_amount').notNull().default(0),
+  totalAmount: integer('total_amount').notNull().default(0),
+  status: billStatus('status').notNull().default('ISSUED'),
+  dueDate: timestamp('due_date'),
+  issuedAt: timestamp('issued_at').defaultNow().notNull(),
+  createdBy: uuid('created_by').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => [
+  index('maintenance_bills_apartment_id_idx').on(t.apartmentId),
+  index('maintenance_bills_period_month_idx').on(t.periodMonth),
+  uniqueIndex('maintenance_bills_monthly_apartment_uniq').on(t.apartmentId, t.periodMonth)
+    .where(sql`${t.type} = 'MONTHLY' and ${t.periodMonth} is not null`),
+])
+
+// A single charge on a bill, with its own GST rate (percent). taxAmount is the
+// computed tax in paise; amount is the pre-tax charge.
+export const billLineItems = pgTable('bill_line_items', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  billId: uuid('bill_id')
+    .notNull()
+    .references(() => maintenanceBills.id),
+  description: text('description').notNull(),
+  amount: integer('amount').notNull(),
+  taxRatePct: integer('tax_rate_pct').notNull().default(0),
+  taxAmount: integer('tax_amount').notNull().default(0),
+  // The income/fund account this charge credits when posted to the ledger
+  // (#97). Null falls back to the default Maintenance Income head at post time.
+  accountId: uuid('account_id').references(() => accounts.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => [index('bill_line_items_bill_id_idx').on(t.billId)])
+
+// A payment recorded against a bill (manual entry today; online later). Dues are
+// derived as sum(bill totals) − sum(payments) per apartment.
+export const payments = pgTable('payments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  billId: uuid('bill_id')
+    .notNull()
+    .references(() => maintenanceBills.id),
+  apartmentId: uuid('apartme
+----------------------------------------
+FILE: guard-devices.ts
+import { pgTable, uuid, text, timestamp, unique } from 'drizzle-orm/pg-core'
+import { guards } from './guards'
+
+// One-device-per-guard binding. A guard has at most one active row (revokedAt
+// null); the first device a guard acts from is auto-bound, and other devices are
+// rejected until an admin revokes. deviceId is a stable client identifier;
+// model is for the admin view. Kept as history so revoked bindings remain.
+export const guardDevices = pgTable(
+  'guard_devices',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    guardId: uuid('guard_id')
+      .notNull()
+      .references(() => guards.id),
+    deviceId: text('device_id').notNull(),
+    model: text('model'),
+    boundAt: timestamp('bound_at').defaultNow().notNull(),
+    lastActiveAt: timestamp('last_active_at').defaultNow().notNull(),
+    revokedAt: timestamp('revoked_at'),
+  },
+  (t) => [unique('guard_devices_guard_device_unq').on(t.guardId, t.deviceId)],
+)
+
+----------------------------------------
+FILE: guard-duty-sessions.ts
+import { pgTable, uuid, timestamp, doublePrecision } from 'drizzle-orm/pg-core'
+import { guards } from './guards'
+
+// A guard's on-duty shift: clock-in -> clock-out, with optional GPS coordinates
+// captured at each end. An open row (clockOutAt null) means the guard is
+// currently on duty; hours worked derive from clock_in_at -> clock_out_at.
+export const guardDutySessions = pgTable('guard_duty_sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  guardId: uuid('guard_id')
+    .notNull()
+    .references(() => guards.id),
+  clockInAt: timestamp('clock_in_at').defaultNow().notNull(),
+  clockInLat: doublePrecision('clock_in_lat'),
+  clockInLng: doublePrecision('clock_in_lng'),
+  clockOutAt: timestamp('clock_out_at'),
+  clockOutLat: doublePrecision('clock_out_lat'),
+  clockOutLng: doublePrecision('clock_out_lng'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+----------------------------------------
+FILE: guards.ts
+import { pgTable, uuid, text, timestamp, boolean } from 'drizzle-orm/pg-core'
+import { users } from './users'
+
+// userId is nullable: some societies issue each guard a personal login, others use a
+// shared gate device with no individual user account.
+export const guards = pgTable('guards', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id),
+  name: text('name').notNull(),
+  phone: text('phone'),
+  employeeCode: text('employee_code'),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+----------------------------------------
+FILE: house-help-assignments.ts
+import { pgTable, uuid, timestamp, unique } from 'drizzle-orm/pg-core'
+import { houseHelp } from './house-help'
+import { apartments } from './apartments'
+import { users } from './users'
+
+// Which apartments a house help serves. One help ↔ many apartments (a maid may
+// work several flats); the unique pair keeps a help from being double-assigned
+// to the same apartment. assignedBy is the admin or resident who linked them.
+export const houseHelpAssignments = pgTable(
+  'house_help_assignments',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    houseHelpId: uuid('house_help_id')
+      .notNull()
+      .references(() => houseHelp.id),
+    apartmentId: uuid('apartment_id')
+      .notNull()
+      .references(() => apartments.id),
+    assignedBy: uuid('assigned_by').references(() => users.id),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => [unique('house_help_assignments_help_apartment_unq').on(t.houseHelpId, t.apartmentId)],
+)
+
+----------------------------------------
+FILE: house-help-entries.ts
+import { pgTable, uuid, timestamp, index } from 'drizzle-orm/pg-core'
+import { houseHelp } from './house-help'
+import { apartments } from './apartments'
+import { users } from './users'
+
+// Attendance log: one row per gate visit for a registered house help. Pre-approved
+// help is checked in instantly by the guard (no resident approval), so there is no
+// status machine here — an open row (checkOutAt null) means "currently inside".
+// Working hours derive from check_in_at -> check_out_at.
+export const houseHelpEntries = pgTable('house_help_entries', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  houseHelpId: uuid('house_help_id')
+    .notNull()
+    .references(() => houseHelp.id),
+  apartmentId: uuid('apartment_id').references(() => apartments.id),
+  checkInAt: timestamp('check_in_at').defaultNow().notNull(),
+  checkInBy: uuid('check_in_by').references(() => users.id),
+  checkOutAt: timestamp('check_out_at'),
+  checkOutBy: uuid('check_out_by').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => [index('house_help_entries_house_help_id_idx').on(t.houseHelpId)])
+
+----------------------------------------
+FILE: house-help-reviews.ts
+import { pgTable, uuid, integer, text, timestamp, unique } from 'drizzle-orm/pg-core'
+import { houseHelp } from './house-help'
+import { users } from './users'
+
+// Resident ratings/reviews of house help. reviewerId is stored for one-review-
+// per-resident dedup (upsert) but is NEVER exposed by the API — reviews are
+// anonymous to everyone. rating is 1..5 (enforced at the schema layer).
+export const houseHelpReviews = pgTable(
+  'house_help_reviews',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    houseHelpId: uuid('house_help_id')
+      .notNull()
+      .references(() => houseHelp.id),
+    reviewerId: uuid('reviewer_id')
+      .notNull()
+      .references(() => users.id),
+    rating: integer('rating').notNull(),
+    comment: text('comment'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [unique('house_help_reviews_help_reviewer_unq').on(t.houseHelpId, t.reviewerId)],
+)
+
+----------------------------------------
+FILE: house-help.ts
+import { pgTable, uuid, text, timestamp, boolean, integer } from 'drizzle-orm/pg-core'
+import { users } from './users'
+import { houseHelpType, idProofType, backgroundCheckStatus } from './enums'
+
+// A domestic worker (maid, cook, driver, ...) registered in the society's
+// registry. Assignments to specific apartments live in a separate junction
+// table (multi-apartment help is common). photoUrl / idProofUrl are set once
+// R2 upload (task #6) lands; until then the registry works without documents.
+export const houseHelp = pgTable('house_help', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  phone: text('phone'),
+  type: houseHelpType('type').notNull().default('OTHER'),
+  photoUrl: text('photo_url'),
+  idProofType: idProofType('id_proof_type'),
+  idProofNumber: text('id_proof_number'),
+  idProofUrl: text('id_proof_url'),
+  // Verification & trust signals (#67), set by admins.
+  idVerified: boolean('id_verified').notNull().default(false),
+  backgroundCheck: backgroundCheckStatus('background_check').notNull().default('PENDING'),
+  incidentCount: integer('incident_count').notNull().default(0),
+  isActive: boolean('is_active').notNull().default(true),
+  registeredBy: uuid('registered_by').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+----------------------------------------
+FILE: index.ts
+export * from './enums'
+export * from './users'
+export * from './society-config'
+export * from './apartments'
+export * from './residencies'
+export * from './guards'
+export * from './visitor-pre-approvals'
+export * from './visitor-entries'
+export * from './notices'
+export * from './notice-reads'
+export * from './maintenance-tickets'
+export * from './house-help'
+export * from './house-help-entries'
+export * from './house-help-assignments'
+export * from './house-help-reviews'
+export * from './vehicles'
+export * from './parking-slots'
+export * from './guard-duty-sessions'
+export * from './guard-devices'
+export * from './finance'
+export * from './bill-config'
+export * from './ledger'
+export * from './expenses'
+export * from './push'
+
+----------------------------------------
+FILE: ledger.ts
+import {
+  pgTable,
+  uuid,
+  text,
+  integer,
+  boolean,
+  timestamp,
+  date,
+  index,
+  uniqueIndex,
+  type AnyPgColumn,
+} from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import { apartments } from './apartments'
+import { users } from './users'
+import { accountType, journalSource } from './enums'
+
+// Double-entry general ledger (#97). All money is integer paise, matching the
+// billing tables. The ledger is append-only: corrections are reversing entries
+// (see journalEntries.isReversal / reversesId), never row edits or deletes —
+// that is what gives an audit trail. Balances and statements are always SUM()
+// over journalLines, never cached columns.
+
+// Chart of accounts. `code` is a stable, sortable string ("1100"). Only leaf
+// accounts (isGroup = false) accept journal lines; groups are for hierarchy.
+// `isMutual` applies to INCOME accounts: true = exempt member income (principle
+// of mutuality), false = taxable (FD interest, hoarding rent) — this drives the
+// mutual-vs-taxable split the statutory statements (#98) need for ITR-5.
+export const accounts = pgTable(
+  'accounts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    code: text('code').notNull().unique(),
+    name: text('name').notNull(),
+    type: accountType('type').notNull(),
+    parentId: uuid('parent_id').references((): AnyPgColumn => accounts.id),
+    isGroup: boolean('is_group').notNull().default(false),
+    isMutual: boolean('is_mutual'),
+    isActive: boolean('is_active').notNull().default(true),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => [index('accounts_type_idx').on(t.type), index('accounts_parent_id_idx').on(t.parentId)],
+)
+
+// One balanced journal entry per business event. entryDate is the accounting
+// date (may differ from createdAt); period ('YYYY-MM') is the lockable fiscal
+// bucket. sourceType/sourceId link back to the originating bill/payment/expense.
+export const journalEntries = pgTable(
+  'journal_entries',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    entryDate: date('entry_date').notNull(),
+    narration: text('narration').notNull(),
+    sourceType: journalSource('source_type').notNull(),
+    sourceId: uuid('source_id'), // soft FK to bill/payment/expense
+    period: text('period').notNull(), // 'YYYY-MM' for period locking
+    isReversal: boolean('is_reversal').notNull().default(false),
+    reversesId: uuid('reverses_id').references((): AnyPgColumn => journalEntries.id),
+    createdBy: uuid('created_by').references(() => users.id),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => [
+    index('journal_entries_period_idx').on(t.period),
+    index('journal_entries_source_type_idx').on(t.sourceType),
+    // Idempotency: one auto-posted entry per (source_type, source_id). Manual/
+    // opening/adjustment/waiver entries are exempt (they carry a null source_id
+    // and are not machine re-processed).
+    uniqueIndex('journal_entries_source_uniq')
+      .on(t.sourceTyp
+----------------------------------------
+FILE: maintenance-tickets.ts
+import { pgTable, uuid, text, timestamp, index } from 'drizzle-orm/pg-core'
+import { apartments } from './apartments'
+import { users } from './users'
+import { ticketStatus, ticketCategory, ticketPriority } from './enums'
+
+// Maintenance requests raised by a resident for their apartment; an admin
+// triages (assigns, works, resolves) through the ticket lifecycle.
+export const maintenanceTickets = pgTable('maintenance_tickets', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  apartmentId: uuid('apartment_id')
+    .notNull()
+    .references(() => apartments.id),
+  raisedBy: uuid('raised_by')
+    .notNull()
+    .references(() => users.id),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  category: ticketCategory('category').notNull().default('OTHER'),
+  priority: ticketPriority('priority').notNull().default('NORMAL'),
+  status: ticketStatus('status').notNull().default('OPEN'),
+  assignedTo: uuid('assigned_to').references(() => users.id),
+  resolutionNote: text('resolution_note'),
+  resolvedAt: timestamp('resolved_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => [
+  index('maintenance_tickets_status_idx').on(t.status),
+  index('maintenance_tickets_apartment_id_idx').on(t.apartmentId),
+  index('maintenance_tickets_category_idx').on(t.category),
+])
+
+----------------------------------------
+FILE: notice-reads.ts
+import { pgTable, uuid, timestamp, unique } from 'drizzle-orm/pg-core'
+import { notices } from './notices'
+import { users } from './users'
+
+// Read receipt: one row per (notice, user) the first time they open it. The
+// unique pair keeps marking-as-read idempotent; readAt drives engagement stats.
+export const noticeReads = pgTable(
+  'notice_reads',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    noticeId: uuid('notice_id')
+      .notNull()
+      .references(() => notices.id),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id),
+    readAt: timestamp('read_at').defaultNow().notNull(),
+  },
+  (t) => [unique('notice_reads_notice_user_unq').on(t.noticeId, t.userId)],
+)
+
+----------------------------------------
+FILE: notices.ts
+import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core'
+import { users } from './users'
+import { noticePriority, noticeCategory } from './enums'
+
+export const notices = pgTable('notices', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  title: text('title').notNull(),
+  body: text('body').notNull(),
+  priority: noticePriority('priority').notNull().default('NORMAL'),
+  category: noticeCategory('category').notNull().default('GENERAL'),
+  // Optional single attachment (PDF/image) stored in R2; url is the /uploads path.
+  attachmentUrl: text('attachment_url'),
+  attachmentName: text('attachment_name'),
+  publishedBy: uuid('published_by')
+    .notNull()
+    .references(() => users.id),
+  publishedAt: timestamp('published_at').defaultNow().notNull(),
+  expiresAt: timestamp('expires_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+----------------------------------------
+FILE: parking-slots.ts
+import { pgTable, uuid, text, timestamp, boolean, unique, index } from 'drizzle-orm/pg-core'
+import { apartments } from './apartments'
+import { users } from './users'
+import { visitorEntries } from './visitor-entries'
+import { parkingSlotType } from './enums'
+
+// Society parking inventory. Each row is one physical slot. Resident slots are
+// allocated to a flat (apartmentId); visitor slots (isVisitor) form a
+// first-come pool auto-assigned to a visitor entry at the gate.
+// slotNumber is stored normalized (uppercase, no spaces) and unique.
+// A null apartmentId means the resident slot is unallocated. Temporary
+// allocations set isTemporary + assignedUntil so the directory shows a slot as
+// free again once the window lapses (enforced in the shared helpers, not the DB).
+export const parkingSlots = pgTable(
+  'parking_slots',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    slotNumber: text('slot_number').notNull(),
+    type: parkingSlotType('type').notNull().default('OPEN'),
+    apartmentId: uuid('apartment_id').references(() => apartments.id),
+    isTemporary: boolean('is_temporary').notNull().default(false),
+    assignedUntil: timestamp('assigned_until'),
+    assignedBy: uuid('assigned_by').references(() => users.id),
+    assignedAt: timestamp('assigned_at'),
+    // Visitor pool: isVisitor slots are auto-assigned first-come to a visitor
+    // entry on check-in and released on check-out.
+    isVisitor: boolean('is_visitor').notNull().default(false),
+    occupiedByEntryId: uuid('occupied_by_entry_id').references(() => visitorEntries.id),
+    occupiedAt: timestamp('occupied_at'),
+    notes: text('notes'),
+    isActive: boolean('is_active').notNull().default(true),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [
+    unique('parking_slots_slot_number_unq').on(t.slotNumber),
+    index('parking_slots_apartment_id_idx').on(t.apartmentId),
+    index('parking_slots_is_visitor_idx').on(t.isVisitor),
+  ],
+)
+
+----------------------------------------
+FILE: push.ts
+import { pgTable, uuid, text, timestamp, index, integer, jsonb, uniqueIndex } from 'drizzle-orm/pg-core'
+import { users } from './users'
+
+export const pushDevices = pgTable('push_devices', {
+  token: text('token').primaryKey(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  platform: text('platform').notNull(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (t) => [index('push_devices_user_idx').on(t.userId)])
+
+export const pushDeliveries = pgTable('push_deliveries', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  token: text('token').notNull().references(() => pushDevices.token, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  eventKey: text('event_key').notNull(),
+  message: jsonb('message').notNull().$type<{ title: string; body: string; data: { screen: string } }>(),
+  status: text('status').notNull().default('queued').$type<'queued' | 'sending' | 'receipt' | 'delivered' | 'failed'>(),
+  ticketId: text('ticket_id'),
+  attempts: integer('attempts').notNull().default(0),
+  nextAttemptAt: timestamp('next_attempt_at').notNull().defaultNow(),
+  expiresAt: timestamp('expires_at').notNull(),
+  lastError: text('last_error'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (t) => [
+  uniqueIndex('push_deliveries_event_device_idx').on(t.eventKey, t.token),
+  index('push_deliveries_pending_idx').on(t.status, t.nextAttemptAt),
+])
+
+----------------------------------------
+FILE: residencies.ts
+import { pgTable, uuid, timestamp, boolean, index } from 'drizzle-orm/pg-core'
+import { users } from './users'
+import { apartments } from './apartments'
+import { residencyRelation } from './enums'
+
+// Junction: which users live in which apartments, and in what capacity.
+export const residencies = pgTable(
+  'residencies',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id),
+    apartmentId: uuid('apartment_id')
+      .notNull()
+      .references(() => apartments.id),
+    relation: residencyRelation('relation').notNull().default('OWNER'),
+    isPrimary: boolean('is_primary').notNull().default(false),
+    startDate: timestamp('start_date').defaultNow().notNull(),
+    endDate: timestamp('end_date'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  // Hot path: resolving which flats a user lives in (auth/ownership checks).
+  (t) => [index('residencies_user_id_idx').on(t.userId), index('residencies_apartment_id_idx').on(t.apartmentId)],
+)
+
+----------------------------------------
+FILE: society-config.ts
+import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core'
+
+// Single-tenant: each deployment serves ONE society. This table holds exactly one row
+// describing that society (enforced at the application layer). No society_id elsewhere.
+export const societyConfig = pgTable('society_config', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  address: text('address').notNull(),
+  city: text('city').notNull(),
+  state: text('state').notNull(),
+  pincode: text('pincode').notNull(),
+  gstin: text('gstin'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+----------------------------------------
+FILE: users.ts
+import { pgTable, uuid, text, timestamp, boolean } from 'drizzle-orm/pg-core'
+import { userRole, userStatus } from './enums'
+
+// Local mirror of Clerk-authenticated users. clerkId links to the Clerk identity;
+// email/phone/name/role are mirrored locally so identity stays portable.
+// status gates app access until an admin approves and assigns a residency.
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  clerkId: text('clerk_id').notNull().unique(),
+  email: text('email').unique(),
+  phone: text('phone').unique(),
+  name: text('name').notNull(),
+  role: userRole('role').notNull().default('RESIDENT'),
+  status: userStatus('status').notNull().default('PENDING'),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+----------------------------------------
+FILE: vehicles.ts
+import { pgTable, uuid, text, timestamp, boolean, unique } from 'drizzle-orm/pg-core'
+import { apartments } from './apartments'
+import { users } from './users'
+import { vehicleType } from './enums'
+
+// Resident-owned vehicles, registered against a flat. registrationNumber is
+// stored normalized (uppercase, no spaces) and unique so gate logs can match a
+// plate to a known resident vehicle. Gate entries themselves are captured on
+// visitor_entries.vehicleNumber — this table is the registry side.
+export const vehicles = pgTable(
+  'vehicles',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    apartmentId: uuid('apartment_id')
+      .notNull()
+      .references(() => apartments.id),
+    registeredBy: uuid('registered_by').references(() => users.id),
+    registrationNumber: text('registration_number').notNull(),
+    type: vehicleType('type').notNull().default('CAR'),
+    make: text('make'),
+    color: text('color'),
+    isActive: boolean('is_active').notNull().default(true),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [unique('vehicles_registration_number_unq').on(t.registrationNumber)],
+)
+
+----------------------------------------
+FILE: visitor-entries.ts
+import { pgTable, uuid, text, timestamp, index, uniqueIndex } from 'drizzle-orm/pg-core'
+import { apartments } from './apartments'
+import { users } from './users'
+import { guards } from './guards'
+import { visitorPreApprovals } from './visitor-pre-approvals'
+import { visitorType, visitorStatus } from './enums'
+
+// Core visitor entry/exit workflow + approval state machine (replaces the old flat `visitors`).
+// visitorPhone is nullable — deliveries / unknown walk-ins may have no number.
+export const visitorEntries = pgTable(
+  'visitor_entries',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    // Client-supplied idempotency key for offline registration. When a guard's
+    // app queues an entry offline and later replays it (possibly more than once
+    // after a lost ack), the unique index below dedupes to a single row.
+    clientId: uuid('client_id'),
+    apartmentId: uuid('apartment_id')
+      .notNull()
+      .references(() => apartments.id),
+    preApprovalId: uuid('pre_approval_id').references(() => visitorPreApprovals.id),
+    visitorName: text('visitor_name').notNull(),
+    visitorPhone: text('visitor_phone'),
+    type: visitorType('type').notNull().default('GUEST'),
+    status: visitorStatus('status').notNull().default('PENDING'),
+    purpose: text('purpose'),
+    vehicleNumber: text('vehicle_number'),
+    photoUrl: text('photo_url'),
+    approvedBy: uuid('approved_by').references(() => users.id),
+    deniedReason: text('denied_reason'),
+    checkInBy: uuid('check_in_by').references(() => guards.id),
+    checkOutBy: uuid('check_out_by').references(() => guards.id),
+    checkInAt: timestamp('check_in_at'),
+    checkOutAt: timestamp('check_out_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  // List filters (status, per-flat) and trend/date-range scans.
+  (t) => [
+    index('visitor_entries_status_idx').on(t.status),
+    index('visitor_entries_apartment_id_idx').on(t.apartmentId),
+    index('visitor_entries_created_at_idx').on(t.createdAt),
+    // Nullable, so pre-existing rows (client_id IS NULL) coexist; Postgres treats
+    // NULLs as distinct, and only offline-registered entries carry a key.
+    uniqueIndex('visitor_entries_client_id_idx').on(t.clientId),
+  ],
+)
+
+----------------------------------------
+FILE: visitor-pre-approvals.ts
+import { pgTable, uuid, text, integer, timestamp, boolean } from 'drizzle-orm/pg-core'
+import { apartments } from './apartments'
+import { users } from './users'
+import { preApprovalType } from './enums'
+
+// Resident-created pre-approval. `code` is the shareable token a guard looks up / scans
+// at the gate to auto-create an approved visitor_entry without a live approval round-trip.
+export const visitorPreApprovals = pgTable('visitor_pre_approvals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  apartmentId: uuid('apartment_id')
+    .notNull()
+    .references(() => apartments.id),
+  createdBy: uuid('created_by')
+    .notNull()
+    .references(() => users.id),
+  visitorName: text('visitor_name').notNull(),
+  visitorPhone: text('visitor_phone'),
+  approvalType: preApprovalType('approval_type').notNull().default('ONE_TIME'),
+  code: text('code').notNull().unique(),
+  validFrom: timestamp('valid_from').defaultNow().notNull(),
+  validUntil: timestamp('valid_until'),
+  maxUses: integer('max_uses'),
+  useCount: integer('use_count').notNull().default(0),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+----------------------------------------
+
+
+```
+
+```python
+print("=== API INDEX.TS ===")
+print(read_file('/tmp/opensociety_extracted/opensociety/apps/api/src/index.ts', 6000))
+print("\n=== API ROUTES LIST ===")
+for f in sorted(glob.glob('/tmp/opensociety_extracted/opensociety/apps/api/src/routes/*.ts')):
+    if not f.endswith('.test.ts'):
+        print("ROUTE:", os.path.basename(f))
+        print(read_file(f, 1800))
+        print("=" * 30)
+
+
+```
+
+```text
+=== API INDEX.TS ===
+import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+import { createDb, billConfig } from '@opensociety/db'
+import { periodMonthOf, dueDateForPeriod } from '@opensociety/shared'
+import type { AppEnv, Bindings } from './types'
+import { generateMonthlyBills } from './lib/generate-bills'
+import { postMonthlyBills } from './lib/ledger-posting'
+import { societyRoutes } from './routes/society'
+import { apartmentRoutes } from './routes/apartments'
+import { visitorRoutes } from './routes/visitors'
+import { noticeRoutes } from './routes/notices'
+import { userRoutes } from './routes/users'
+import { guardRoutes } from './routes/guards'
+import { ticketRoutes } from './routes/tickets'
+import { houseHelpRoutes } from './routes/house-help'
+import { vehicleRoutes } from './routes/vehicles'
+import { parkingRoutes } from './routes/parking'
+import { uploadRoutes } from './routes/uploads'
+import { billRoutes } from './routes/bills'
+import { paymentRoutes } from './routes/payments'
+import { billConfigRoutes } from './routes/bill-config'
+import { reportRoutes } from './routes/reports'
+import { ledgerRoutes } from './routes/ledger'
+import { expenseRoutes } from './routes/expenses'
+import { webhookRoutes } from './routes/webhooks'
+import { pushRoutes } from './routes/push'
+import { dispatchAndSchedule, requestPushDispatch } from './lib/push-dispatch'
+import { sendBillReminders } from './lib/bill-reminders'
+
+export const app = new Hono<AppEnv>()
+
+app.use('*', cors({
+  origin: (origin, c) => {
+    const configured: string | undefined = c.env?.WEB_ORIGINS
+    const allowed = configured?.split(',').map((value) => value.trim()) ??
+      (c.env?.CLERK_SECRET_KEY ? [] : ['http://localhost:3000', 'http://localhost:8081'])
+    return allowed.includes(origin) ? origin : undefined
+  },
+}))
+
+// Health checks intentionally avoid the DB so they work without DATABASE_URL.
+app.get('/', (c) => c.json({ name: 'opensociety-api', status: 'ok' }))
+app.get('/health', (c) => c.json({ status: 'ok' }))
+
+app.route('/society', societyRoutes)
+app.route('/apartments', apartmentRoutes)
+app.route('/visitors', visitorRoutes)
+app.route('/notices', noticeRoutes)
+app.route('/users', userRoutes)
+app.route('/guards', guardRoutes)
+app.route('/tickets', ticketRoutes)
+app.route('/house-help', houseHelpRoutes)
+app.route('/vehicles', vehicleRoutes)
+app.route('/parking', parkingRoutes)
+app.route('/uploads', uploadRoutes)
+app.route('/bills', billRoutes)
+app.route('/payments', paymentRoutes)
+app.route('/bill-config', billConfigRoutes)
+app.route('/reports', reportRoutes)
+app.route('/ledger', ledgerRoutes)
+app.route('/expenses', expenseRoutes)
+app.route('/webhooks', webhookRoutes)
+app.route('/push', pushRoutes)
+
+app.notFound((c) => c.json({ error: 'not found' }, 404))
+app.onError((err, c) => {
+  console.error(err)
+  return c.json({ error: 'internal error' }, 500)
+})
+
+// Monthly cron (see wrangler.jsonc crons): generate bills for the current month
+// from the saved bill config. Idempotent, so re-runs are safe.
+export async function runMonthlyBilling(env: Bindings, scheduledTime: number) {
+  const db = createDb(env.DATABASE_URL)
+  const [cfg] = await db.select().from(billConfig).limit(1)
+  if (!cfg || cfg.lineItems.length === 0) {
+    console.log('auto-billing: no bill config set; skipping')
+    return
+  }
+  const period = periodMonthOf(new Date(scheduledTime))
+  const result = await generateMonthlyBills(db, {
+    periodMonth: period,
+    title: `Maintenance — ${period}`,
+    dueDate: new Date(dueDateForPeriod(period, cfg.dueDayOfMonth)),
+    lineItems: cfg.lineItems,
+  })
+  // Let the scheduler retry failures; bill creation is already idempotent.
+  await postMonthlyBills(db, period)
+  console.log(`auto-billing ${period}: created ${result.created}, skipped ${result.skipped}`)
+  // TODO: notify residents when bills are generated (blocked on the push service, #15).
+}
+
+export default {
+  fetch: app.fetch,
+  async queue(batch: MessageBatch<{ type: 'dispatch' }>, env: Bindings) {
+    if (env.PUSH_ENABLED !== 'true') { batch.ackAll(); return }
+    try {
+      // Wake-up messages carry no personal data and can be collapsed into one pass.
+      await dispatchAndSchedule(createDb(env.DATABASE_URL), env)
+      batch.ackAll()
+    } catch {
+      console.error('push: dispatch failed; retrying queue batch')
+      batch.retryAll({ delaySeconds: 60 })
+    }
+  },
+  async scheduled(controller: ScheduledController, env: Bindings, ctx: ExecutionContext) {
+    if (controller.cron === '0 0 1 * *') ctx.waitUntil(runMonthlyBilling(env, controller.scheduledTime))
+    if (controller.cron === '0 * * * *' && env.PUSH_ENABLED === 'true') {
+      ctx.waitUntil((async () => {
+        const ran = await sendBillReminders(createDb(env.DATABASE_URL), {
+          now: new Date(controller.scheduledTime), days: env.BILL_REMINDER_DAYS, timeZone: env.SOCIETY_TIME_ZONE,
+        })
+        // The daily reminder run also recovers DB events whose queue publication failed.
+        if (ran) await requestPushDispatch(env)
+      })())
+    }
+  },
+}
+
+
+=== API ROUTES LIST ===
+ROUTE: apartments.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, asc, eq, inArray, isNull, ne } from 'drizzle-orm'
+import { apartments, residencies, users, maintenanceBills, payments } from '@opensociety/db'
+import {
+  createApartmentSchema,
+  createApartmentsBulkSchema,
+  updateApartmentSchema,
+  buildStatement,
+  INTEREST_BILL_TITLE_PREFIX,
+  type StatementEntryInput,
+} from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole, actingUserId } from '../middleware'
+import type { AppEnv } from '../types'
+
+export const apartmentRoutes = new Hono<AppEnv>()
+apartmentRoutes.use('*', withDb)
+apartmentRoutes.use('*', withAuth)
+// Any signed-in user can read the directory; only admins mutate it.
+apartmentRoutes.use('*', requireAuth)
+
+apartmentRoutes.get('/', async (c) => {
+  const rows = await c
+    .get('db')
+    .select()
+    .from(apartments)
+    .orderBy(asc(apartments.tower), asc(apartments.apartmentNo))
+  return c.json(rows)
+})
+
+// The flats the acting user currently lives in (open residencies) — lets the
+// resident app scope actions (e.g. house-help assignments) to their own units.
+apartmentRoutes.get('/mine', async (c) => {
+  const db = c.get('db')
+  const mine = db
+    .select({ id: residencies.apartmentId })
+    .from(residencies)
+    .where(and(eq(residencies.userId, actingUserId(c)!), isNull(residencies.endDate)))
+  const rows = await db
+    .select()
+    .from(apartments)
+    .where(inArray(apartments.id, mine))
+    .orderBy(asc(apartments.tower), asc(apartments.apartmentNo))
+  return c.json(rows)
+})
+
+// Co-residents of the acting user's flats — for the resident profile screen.
+apartmentRoutes.get('/mine/residents', async (c) => {
+  const db = c.get('db')
+  const mine = db
+    .select({ id: residencies.apartmentId })
+
+==============================
+ROUTE: bill-config.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { eq } from 'drizzle-orm'
+import { billConfig } from '@opensociety/db'
+import { updateBillConfigSchema } from '@opensociety/shared'
+import { withDb, withAuth, requireRole, actingUserId } from '../middleware'
+import type { AppEnv } from '../types'
+
+// The recurring-bill template that drives the monthly auto-generation cron.
+// Admin-only. A singleton row.
+export const billConfigRoutes = new Hono<AppEnv>()
+billConfigRoutes.use('*', withDb)
+billConfigRoutes.use('*', withAuth)
+billConfigRoutes.use('*', requireRole('ADMIN'))
+
+billConfigRoutes.get('/', async (c) => {
+  const [cfg] = await c.get('db').select().from(billConfig).limit(1)
+  return c.json(
+    cfg ?? {
+      id: null,
+      dueDayOfMonth: 10,
+      lineItems: [],
+      interestEnabled: false,
+      interestRatePct: 18,
+      gracePeriodDays: 15,
+      updatedBy: null,
+      updatedAt: null,
+    },
+  )
+})
+
+billConfigRoutes.put('/', zValidator('json', updateBillConfigSchema), async (c) => {
+  const db = c.get('db')
+  const input = c.req.valid('json')
+  const [existing] = await db.select({ id: billConfig.id }).from(billConfig).limit(1)
+  if (existing) {
+    const [updated] = await db
+      .update(billConfig)
+      .set({
+        dueDayOfMonth: input.dueDayOfMonth,
+        lineItems: input.lineItems,
+        interestEnabled: input.interestEnabled,
+        interestRatePct: input.interestRatePct,
+        gracePeriodDays: input.gracePeriodDays,
+        updatedBy: actingUserId(c),
+        updatedAt: new Date(),
+      })
+      .where(eq(billConfig.id, existing.id))
+      .returning()
+    return c.json(updated)
+  }
+  const [created] = await db
+    .insert(billConfig)
+    .values({
+      dueDayOfMonth: input.dueDayOfMonth,
+      lineItems: i
+==============================
+ROUTE: bills.ts
+import { Hono } from 'hono'
+import type { Context } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, desc, eq, inArray, isNotNull, isNull, ne, sql } from 'drizzle-orm'
+import { maintenanceBills, billLineItems, payments, apartments, residencies, societyConfig, billConfig } from '@opensociety/db'
+import type { BillStatus } from '@opensociety/shared'
+import {
+  generateBillsSchema,
+  createBillSchema,
+  computeBill,
+  billStatusSchema,
+  sumApartmentInterest,
+  periodMonthOf,
+  ACCOUNT_CODES,
+  INTEREST_BILL_TITLE_PREFIX as INTEREST_TITLE_PREFIX,
+  duesTable,
+} from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole, actingUserId } from '../middleware'
+import { generateMonthlyBills } from '../lib/generate-bills'
+import { safePostMonthlyBills, safePostBill, safeReverseBill, resolveAccounts } from '../lib/ledger-posting'
+import { tableExport } from '../lib/report-export'
+import { renderInvoicePdf } from '../lib/invoice-pdf'
+import type { AppEnv } from '../types'
+
+// Apartment ids the acting user currently lives in (open residencies).
+async function actingUserApartments(c: Context<AppEnv>): Promise<string[]> {
+  const uid = actingUserId(c)
+  if (!uid) return []
+  const rows = await c
+    .get('db')
+    .select({ apartmentId: residencies.apartmentId })
+    .from(residencies)
+    .where(and(eq(residencies.userId, uid), isNull(residencies.endDate)))
+  return rows.map((r) => r.apartmentId)
+}
+
+// Sum of payments per bill id, as a Map.
+async function paidByBill(c: Context<AppEnv>, billIds: string[]): Promise> {
+  if (billIds.length === 0) return new Map()
+  const rows = await c
+    .get('db')
+    .select({ billId: payments.billId, paid: sql<number>`coalesce(sum(${payments.amount}), 0)` })
+    .from(payments)
+    .
+==============================
+ROUTE: expenses.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, asc, desc, eq, gte, inArray, lte, sql } from 'drizzle-orm'
+import { vendors, expenses, tdsEntries, accounts } from '@opensociety/db'
+import { createVendorSchema, updateVendorSchema, createExpenseSchema, computeTds } from '@opensociety/shared'
+import { withDb, withAuth, requireRole, actingUserId } from '../middleware'
+import { safePostExpense, safeSettleExpense } from '../lib/ledger-posting'
+import type { AppEnv } from '../types'
+
+// Expense & vendor management (#94). ADMIN-only. Expenses auto-post to the GL.
+export const expenseRoutes = new Hono<AppEnv>()
+expenseRoutes.use('*', withDb)
+expenseRoutes.use('*', withAuth)
+expenseRoutes.use('*', requireRole('ADMIN'))
+
+// ----- Vendors -----
+
+expenseRoutes.get('/vendors', async (c) => {
+  const rows = await c.get('db').select().from(vendors).orderBy(asc(vendors.name))
+  return c.json(rows)
+})
+
+expenseRoutes.post('/vendors', zValidator('json', createVendorSchema), async (c) => {
+  const input = c.req.valid('json')
+  const [vendor] = await c.get('db').insert(vendors).values(input).returning()
+  return c.json(vendor, 201)
+})
+
+expenseRoutes.patch('/vendors/:id', zValidator('json', updateVendorSchema), async (c) => {
+  const [vendor] = await c
+    .get('db')
+    .update(vendors)
+    .set(c.req.valid('json'))
+    .where(eq(vendors.id, c.req.param('id')))
+    .returning()
+  if (!vendor) return c.json({ error: 'not found' }, 404)
+  return c.json(vendor)
+})
+
+// ----- Expenses -----
+
+// Record an expense against an EXPENSE head, with optional input GST and TDS.
+// Posts the booking entry to the ledger (best-effort).
+expenseRoutes.post('/', zValidator('json', createExpenseSchema), async (c) => {
+  const db = c.get('db')
+  const input = c.req.valid
+==============================
+ROUTE: guards.ts
+import { Hono } from 'hono'
+import type { Context } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, asc, desc, eq, gte, isNull, lte } from 'drizzle-orm'
+import { guards, guardDutySessions, guardDevices } from '@opensociety/db'
+import {
+  createGuardSchema,
+  updateGuardSchema,
+  clockInSchema,
+  clockOutSchema,
+  bindGuardDeviceSchema,
+  isGuardDeviceAllowed,
+} from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole } from '../middleware'
+import type { AppEnv } from '../types'
+
+// One-device-per-guard enforcement. Reads the x-device-id (+ x-device-model)
+// headers: a mismatch against the guard's active bound device is rejected (403)
+// and the matching device's lastActiveAt is bumped; an unbound guard auto-binds
+// the incoming device. Returns a Response to short-circuit, or null to proceed.
+async function enforceGuardDevice(c: Context<AppEnv>, guardId: string): Promise<Response | null> {
+  const db = c.get('db')
+  const incoming = c.req.header('x-device-id') ?? null
+  const [active] = await db
+    .select({ id: guardDevices.id, deviceId: guardDevices.deviceId })
+    .from(guardDevices)
+    .where(and(eq(guardDevices.guardId, guardId), isNull(guardDevices.revokedAt)))
+    .limit(1)
+  if (active) {
+    if (!isGuardDeviceAllowed(active.deviceId, incoming))
+      return c.json({ error: 'device not authorized for this guard' }, 403)
+    await db.update(guardDevices).set({ lastActiveAt: new Date() }).where(eq(guardDevices.id, active.id))
+    return null
+  }
+  if (incoming) {
+    await db
+      .insert(guardDevices)
+      .values({ guardId, deviceId: incoming, model: c.req.header('x-device-model') })
+      .onConflictDoNothing()
+  }
+  return null
+}
+
+// Flat session shape + joined guard name for the duty endpoints.
+const dutyC
+==============================
+ROUTE: house-help.ts
+import { Hono } from 'hono'
+import type { Context } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, asc, desc, eq, gte, inArray, isNull, lte, sql } from 'drizzle-orm'
+import {
+  houseHelp,
+  houseHelpEntries,
+  houseHelpAssignments,
+  houseHelpReviews,
+  apartments,
+  residencies,
+} from '@opensociety/db'
+import type { HouseHelpType } from '@opensociety/shared'
+import {
+  createHouseHelpSchema,
+  updateHouseHelpSchema,
+  houseHelpTypeSchema,
+  checkInHouseHelpSchema,
+  createHouseHelpAssignmentSchema,
+  createHouseHelpReviewSchema,
+  updateVerificationSchema,
+  canManageHouseHelp,
+  canManageHouseHelpAssignment,
+  trustScore,
+  computeTrustScore,
+  verificationLevel,
+} from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole, actingUserId } from '../middleware'
+import type { AppEnv } from '../types'
+
+// True when the acting user currently lives in `apartmentId` (open residency).
+async function actingUserLivesIn(c: Context<AppEnv>, apartmentId: string): Promise<boolean> {
+  const uid = actingUserId(c)
+  if (!uid) return false
+  const [row] = await c
+    .get('db')
+    .select({ id: residencies.id })
+    .from(residencies)
+    .where(
+      and(
+        eq(residencies.userId, uid),
+        eq(residencies.apartmentId, apartmentId),
+        isNull(residencies.endDate),
+      ),
+    )
+    .limit(1)
+  return !!row
+}
+
+export const houseHelpRoutes = new Hono<AppEnv>()
+houseHelpRoutes.use('*', withDb)
+houseHelpRoutes.use('*', withAuth)
+houseHelpRoutes.use('*', requireAuth)
+
+// Registry list. Admins see everyone; other roles see only active profiles.
+// ?type= filters by category; ?apartmentId= limits to help assigned to that flat.
+houseHelpRoutes.get('/', async (c) => {
+  const db = c.get('db')
+  const typeParam = c.req.query('typ
+==============================
+ROUTE: ledger.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, asc, desc, eq } from 'drizzle-orm'
+import { accounts, journalEntries, journalLines } from '@opensociety/db'
+import { manualJournalEntrySchema, journalSourceSchema } from '@opensociety/shared'
+import { withDb, withAuth, requireRole, actingUserId } from '../middleware'
+import { ensureChartOfAccounts } from '../lib/coa'
+import { insertJournalEntry } from '../lib/ledger-posting'
+import type { AppEnv } from '../types'
+
+// Double-entry ledger admin API (#97). All routes are ADMIN-only.
+export const ledgerRoutes = new Hono<AppEnv>()
+ledgerRoutes.use('*', withDb)
+ledgerRoutes.use('*', withAuth)
+ledgerRoutes.use('*', requireRole('ADMIN'))
+
+// Seed/repair the default chart of accounts. Idempotent — run once to switch
+// accounting on for a society.
+ledgerRoutes.post('/init', async (c) => {
+  const result = await ensureChartOfAccounts(c.get('db'))
+  return c.json(result, result.inserted > 0 ? 201 : 200)
+})
+
+// Chart of accounts, ordered by code.
+ledgerRoutes.get('/accounts', async (c) => {
+  const rows = await c.get('db').select().from(accounts).orderBy(asc(accounts.code))
+  return c.json(rows)
+})
+
+// Post a manual/adjusting journal entry (contra, depreciation, opening balances).
+// The body schema already enforces the balanced-entry invariant; insert double-
+// checks server-side and rejects an unbalanced entry.
+ledgerRoutes.post('/journal-entries', zValidator('json', manualJournalEntrySchema), async (c) => {
+  const input = c.req.valid('json')
+  const id = await insertJournalEntry(
+    c.get('db'),
+    {
+      entryDate: input.entryDate,
+      narration: input.narration,
+      sourceType: 'MANUAL',
+      sourceId: null,
+      period: input.entryDate.slice(0, 7),
+      lines: input.lines.ma
+==============================
+ROUTE: notices.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, count, desc, eq, gte, ilike, inArray, isNull, lte, or } from 'drizzle-orm'
+import { apartments, notices, noticeReads, residencies, users } from '@opensociety/db'
+import type { NoticeCategory } from '@opensociety/shared'
+import { createNoticeSchema, noticeCategorySchema } from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole, actingUserId } from '../middleware'
+import type { AppEnv } from '../types'
+import { notifyEvent, roleRecipients } from '../lib/push-events'
+
+export const noticeRoutes = new Hono<AppEnv>()
+noticeRoutes.use('*', withDb)
+noticeRoutes.use('*', withAuth)
+// Any signed-in user can read the board; only admins publish.
+noticeRoutes.use('*', requireAuth)
+
+// Notice board / archive. Filters: ?category=, ?from=/?to= (published date, ISO),
+// ?q= keyword over title + body. Newest first. Each notice is enriched with the
+// total read count and whether the acting user has read it.
+noticeRoutes.get('/', async (c) => {
+  const db = c.get('db')
+  const conds = []
+
+  const cat = noticeCategorySchema.safeParse(c.req.query('category'))
+  if (cat.success) conds.push(eq(notices.category, cat.data as NoticeCategory))
+  const from = new Date(c.req.query('from') ?? '')
+  if (!isNaN(from.valueOf())) conds.push(gte(notices.publishedAt, from))
+  const to = new Date(c.req.query('to') ?? '')
+  if (!isNaN(to.valueOf())) conds.push(lte(notices.publishedAt, to))
+  const q = c.req.query('q')?.trim()
+  if (q) {
+    const like = `%${q}%`
+    conds.push(or(ilike(notices.title, like), ilike(notices.body, like)))
+  }
+
+  const rows = await db
+    .select()
+    .from(notices)
+    .where(conds.length ? and(...conds) : undefined)
+    .orderBy(desc(notices.publishedAt))
+  const 
+==============================
+ROUTE: parking.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, asc, eq } from 'drizzle-orm'
+import { parkingSlots, apartments, visitorEntries } from '@opensociety/db'
+import {
+  createParkingSlotSchema,
+  updateParkingSlotSchema,
+  assignParkingSlotSchema,
+  normalizeSlotNumber,
+  visitorParkingSummary,
+} from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole, actingUserId } from '../middleware'
+import type { AppEnv } from '../types'
+
+export const parkingRoutes = new Hono<AppEnv>()
+parkingRoutes.use('*', withDb)
+parkingRoutes.use('*', withAuth)
+parkingRoutes.use('*', requireAuth)
+
+// Full inventory with each slot's assigned flat label. Admin-only management view.
+parkingRoutes.get('/slots', requireRole('ADMIN'), async (c) => {
+  const db = c.get('db')
+  const rows = await db
+    .select({
+      id: parkingSlots.id,
+      slotNumber: parkingSlots.slotNumber,
+      type: parkingSlots.type,
+      apartmentId: parkingSlots.apartmentId,
+      isTemporary: parkingSlots.isTemporary,
+      assignedUntil: parkingSlots.assignedUntil,
+      assignedBy: parkingSlots.assignedBy,
+      assignedAt: parkingSlots.assignedAt,
+      notes: parkingSlots.notes,
+      isActive: parkingSlots.isActive,
+      createdAt: parkingSlots.createdAt,
+      updatedAt: parkingSlots.updatedAt,
+      tower: apartments.tower,
+      apartmentNo: apartments.apartmentNo,
+    })
+    .from(parkingSlots)
+    .leftJoin(apartments, eq(apartments.id, parkingSlots.apartmentId))
+    .where(eq(parkingSlots.isVisitor, false))
+    .orderBy(asc(parkingSlots.slotNumber))
+  return c.json(
+    rows.map(({ tower, apartmentNo, ...r }) => ({
+      ...r,
+      apartment: tower ? `${tower}-${apartmentNo}` : null,
+    })),
+  )
+})
+
+// Read-only directory any resident can see: whi
+==============================
+ROUTE: payments.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, desc, eq, inArray, isNull, sql } from 'drizzle-orm'
+import { maintenanceBills, payments, residencies } from '@opensociety/db'
+import { recordPaymentSchema, billStatusFor } from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole, actingUserId } from '../middleware'
+import { safePostPayment } from '../lib/ledger-posting'
+import type { AppEnv } from '../types'
+
+export const paymentRoutes = new Hono<AppEnv>()
+paymentRoutes.use('*', withDb)
+paymentRoutes.use('*', withAuth)
+paymentRoutes.use('*', requireAuth)
+
+// Admin records a payment against a bill; the bill's status is recomputed from
+// its total vs the amount paid so far. 404 if the bill is missing.
+paymentRoutes.post('/', requireRole('ADMIN'), zValidator('json', recordPaymentSchema), async (c) => {
+  const db = c.get('db')
+  const input = c.req.valid('json')
+  const [bill] = await db
+    .select({ id: maintenanceBills.id, apartmentId: maintenanceBills.apartmentId, total: maintenanceBills.totalAmount })
+    .from(maintenanceBills)
+    .where(eq(maintenanceBills.id, input.billId))
+    .limit(1)
+  if (!bill) return c.json({ error: 'bill not found' }, 404)
+
+  const [payment] = await db
+    .insert(payments)
+    .values({
+      billId: bill.id,
+      apartmentId: bill.apartmentId,
+      amount: input.amount,
+      method: input.method,
+      reference: input.reference,
+      notes: input.notes,
+      paidAt: input.paidAt ? new Date(input.paidAt) : new Date(),
+      recordedBy: actingUserId(c),
+    })
+    .returning()
+
+  const [{ paid }] = await db
+    .select({ paid: sql<number>`coalesce(sum(${payments.amount}), 0)` })
+    .from(payments)
+    .where(eq(payments.billId, bill.id))
+  await db
+    .update(maintenanc
+==============================
+ROUTE: push.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, eq } from 'drizzle-orm'
+import { pushDevices } from '@opensociety/db'
+import { registerPushTokenSchema, unregisterPushTokenSchema } from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, actingUserId } from '../middleware'
+import type { AppEnv } from '../types'
+
+export const pushRoutes = new Hono<AppEnv>()
+pushRoutes.use('*', withDb, withAuth, requireAuth)
+
+pushRoutes.post('/tokens', zValidator('json', registerPushTokenSchema), async (c) => {
+  if (c.get('userStatus') !== 'APPROVED') return c.json({ error: 'approval required' }, 403)
+  const input = c.req.valid('json')
+  const userId = actingUserId(c)!
+  await c.get('db').insert(pushDevices).values({ ...input, userId }).onConflictDoUpdate({
+    target: pushDevices.token,
+    set: { userId, platform: input.platform, updatedAt: new Date() },
+  })
+  return c.json({ ok: true })
+})
+
+pushRoutes.delete('/tokens', zValidator('json', unregisterPushTokenSchema), async (c) => {
+  await c.get('db').delete(pushDevices).where(and(
+    eq(pushDevices.token, c.req.valid('json').token),
+    eq(pushDevices.userId, actingUserId(c)!),
+  ))
+  return c.json({ ok: true })
+})
+
+==============================
+ROUTE: reports.ts
+import { Hono } from 'hono'
+import type { Context } from 'hono'
+import { and, eq, gte, inArray, isNotNull, lt, lte, sql } from 'drizzle-orm'
+import {
+  maintenanceBills,
+  payments,
+  apartments,
+  visitorEntries,
+  societyConfig,
+  houseHelp,
+  houseHelpEntries,
+  maintenanceTickets,
+  accounts,
+  journalEntries,
+  journalLines,
+} from '@opensociety/db'
+import {
+  analyzePayers,
+  collectionRatePct,
+  fillHours,
+  peakHour,
+  averagePerDay,
+  fillDaysOfWeek,
+  avgResolutionHours,
+  trialBalance,
+  incomeExpenditure,
+  balanceSheet,
+  receiptsAndPayments,
+  bucketAging,
+  AGING_BUCKETS,
+  trialBalanceTable,
+  incomeExpenditureTable,
+  balanceSheetTable,
+  receiptsPaymentsTable,
+  buildTallyXml,
+  tallyParentForType,
+  type AccountBalance,
+  type CashEntryLine,
+  type TallyVoucher,
+} from '@opensociety/shared'
+import type { VisitorTrends } from '@opensociety/shared'
+import { withDb, withAuth, requireRole } from '../middleware'
+import { renderVisitorTrendsPdf } from '../lib/visitor-trends-pdf'
+import { renderTablePdf } from '../lib/statements-pdf'
+import { tableExport } from '../lib/report-export'
+import type { Table } from '@opensociety/shared'
+import type { AppEnv } from '../types'
+
+// Export a statement Table as pdf/xlsx/csv per ?format, else null (-> JSON).
+async function statementResponse(
+  c: Context<AppEnv>,
+  table: Table,
+  baseName: string,
+  title: string,
+  meta?: string,
+): Promise<Response | null> {
+  const format = c.req.query('format')
+  if (format === 'pdf') {
+    const [society] = await c.get('db').select({ name: societyConfig.name }).from(societyConfig).limit(1)
+    const pdf = await renderTablePdf({ society: society?.name ?? 'Society', title, meta, table })
+    const body = new ArrayBuffer(pdf.byteLength)
+    new Uint8Array(body).set(pdf)
+    return n
+==============================
+ROUTE: society.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { eq } from 'drizzle-orm'
+import { societyConfig } from '@opensociety/db'
+import { updateSocietyConfigSchema } from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole } from '../middleware'
+import type { AppEnv } from '../types'
+
+export const societyRoutes = new Hono<AppEnv>()
+societyRoutes.use('*', withDb)
+societyRoutes.use('*', withAuth)
+// Any signed-in user can read the society profile; only admins change it.
+societyRoutes.use('*', requireAuth)
+
+// Single-tenant: at most one config row.
+societyRoutes.get('/', async (c) => {
+  const [row] = await c.get('db').select().from(societyConfig).limit(1)
+  return c.json(row ?? null)
+})
+
+// Upsert the single society config row.
+societyRoutes.put('/', requireRole('ADMIN'), zValidator('json', updateSocietyConfigSchema), async (c) => {
+  const db = c.get('db')
+  const input = c.req.valid('json')
+  const [existing] = await db.select().from(societyConfig).limit(1)
+  if (existing) {
+    const [updated] = await db
+      .update(societyConfig)
+      .set({ ...input, updatedAt: new Date() })
+      .where(eq(societyConfig.id, existing.id))
+      .returning()
+    return c.json(updated)
+  }
+  const [created] = await db.insert(societyConfig).values(input).returning()
+  return c.json(created, 201)
+})
+
+==============================
+ROUTE: tickets.ts
+import { Hono } from 'hono'
+import type { Context } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, desc, eq, inArray, isNull } from 'drizzle-orm'
+import { maintenanceTickets, residencies, users } from '@opensociety/db'
+import type { TicketStatus, TicketAction } from '@opensociety/shared'
+import {
+  createTicketSchema,
+  transitionTicketSchema,
+  assignTicketSchema,
+  TICKET_TRANSITIONS,
+  canTicketTransition,
+} from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole, actingUserId } from '../middleware'
+import type { AppEnv } from '../types'
+
+// Applies a lifecycle transition to a ticket, enforcing the state machine:
+// 404 if missing, 409 if the action is illegal from its current status.
+export async function applyTicketTransition(
+  c: Context<AppEnv>,
+  action: TicketAction,
+  extra: Partial<typeof maintenanceTickets.$inferInsert>,
+) {
+  const db = c.get('db')
+  const id = c.req.param('id')
+  const [ticket] = await db
+    .select({ status: maintenanceTickets.status })
+    .from(maintenanceTickets)
+    .where(eq(maintenanceTickets.id, id))
+    .limit(1)
+  if (!ticket) return c.json({ error: 'not found' }, 404)
+  if (!canTicketTransition(action, ticket.status))
+    return c.json({ error: `cannot ${action} a ticket in ${ticket.status} state` }, 409)
+  const [updated] = await db
+    .update(maintenanceTickets)
+    .set({ status: TICKET_TRANSITIONS[action].to, updatedAt: new Date(), ...extra })
+    .where(eq(maintenanceTickets.id, id))
+    .returning()
+  return c.json(updated)
+}
+
+export const ticketRoutes = new Hono<AppEnv>()
+ticketRoutes.use('*', withDb)
+ticketRoutes.use('*', withAuth)
+ticketRoutes.use('*', requireAuth)
+
+// Admin sees all tickets; a resident sees only their own apartments' tickets.
+ticketRoutes.get('/', a
+==============================
+ROUTE: uploads.ts
+import { Hono } from 'hono'
+import { withDb, withAuth, requireAuth } from '../middleware'
+import type { AppEnv } from '../types'
+
+// Photo / ID-proof storage backed by R2. Both endpoints require auth; a stored
+// object is streamed back only to a signed-in user (keys are random UUIDs).
+// Note: because GET is auth-gated, clients fetch with their token and build an
+// object URL rather than using a bare <img src> — see the web/mobile wiring.
+const MAX_BYTES = 5 * 1024 * 1024
+const ALLOWED: Record<string, string> = {
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  'image/webp': '.webp',
+  'application/pdf': '.pdf',
+}
+
+export const uploadRoutes = new Hono<AppEnv>()
+uploadRoutes.use('*', withDb)
+uploadRoutes.use('*', withAuth)
+uploadRoutes.use('*', requireAuth)
+
+// Store a single file (raw body, its own content-type). Returns the object key
+// and the path to fetch it back. 415 unsupported type, 413 too large.
+uploadRoutes.post('/', async (c) => {
+  const contentType = (c.req.header('content-type') ?? '').split(';')[0].trim()
+  const ext = ALLOWED[contentType]
+  if (!ext) return c.json({ error: 'unsupported content type' }, 415)
+
+  const body = await c.req.arrayBuffer()
+  if (body.byteLength === 0) return c.json({ error: 'empty body' }, 400)
+  if (body.byteLength > MAX_BYTES) return c.json({ error: 'file too large (max 5MB)' }, 413)
+
+  const key = `${crypto.randomUUID()}${ext}`
+  await c.env.UPLOADS.put(key, body, { httpMetadata: { contentType } })
+  return c.json({ key, url: `/uploads/${key}` }, 201)
+})
+
+// Stream a stored object back to a signed-in user.
+uploadRoutes.get('/:key', async (c) => {
+  const obj = await c.env.UPLOADS.get(c.req.param('key'))
+  if (!obj) return c.json({ error: 'not found' }, 404)
+  const headers = new Headers()
+  obj.writeHttpMetadata(headers)
+ 
+==============================
+ROUTE: users.ts
+import { Hono } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { desc, eq } from 'drizzle-orm'
+import { users, residencies, apartments } from '@opensociety/db'
+import type { UserStatus } from '@opensociety/shared'
+import { approveUserSchema, updateUserRoleSchema } from '@opensociety/shared'
+import { withDb, withAuth, requireRole } from '../middleware'
+import { parsePagination } from '../pagination'
+import type { AppEnv } from '../types'
+
+export const userRoutes = new Hono<AppEnv>()
+userRoutes.use('*', withDb)
+userRoutes.use('*', withAuth)
+// User management (approval queue, approve, role changes) is admin-only.
+userRoutes.use('*', requireRole('ADMIN'))
+
+// ?status=PENDING -> admin approval queue
+userRoutes.get('/', async (c) => {
+  const db = c.get('db')
+  const status = c.req.query('status') as UserStatus | undefined
+  const { limit, offset } = parsePagination(c)
+  const rows = await db
+    .select()
+    .from(users)
+    .where(status ? eq(users.status, status) : undefined)
+    .orderBy(desc(users.createdAt))
+    .limit(limit)
+    .offset(offset)
+  return c.json(rows)
+})
+
+// Approve a PENDING user and link them to an apartment in one step. The
+// neon-http driver has no interactive transactions, so we validate the user and
+// apartment, create the residency, and only flip the user to APPROVED last —
+// that way a failure never leaves a half-approved user with no residency.
+userRoutes.post('/:id/approve', zValidator('json', approveUserSchema), async (c) => {
+  const db = c.get('db')
+  const id = c.req.param('id')
+  const input = c.req.valid('json')
+
+  const [target] = await db.select({ id: users.id }).from(users).where(eq(users.id, id)).limit(1)
+  if (!target) return c.json({ error: 'not found' }, 404)
+
+  const [apt] = await db
+    .select({ id: apa
+==============================
+ROUTE: vehicles.ts
+import { Hono } from 'hono'
+import type { Context } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, asc, desc, eq, inArray, isNull, isNotNull } from 'drizzle-orm'
+import { vehicles, visitorEntries, apartments, residencies, parkingSlots } from '@opensociety/db'
+import { createVehicleSchema, updateVehicleSchema, normalizePlate, canManageVehicle, vehicleAlertSchema } from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole, actingUserId } from '../middleware'
+import type { AppEnv } from '../types'
+import { apartmentRecipients, notifyEvent } from '../lib/push-events'
+
+// The apartment ids the acting user currently lives in (open residencies).
+async function actingUserApartments(c: Context<AppEnv>): Promise<string[]> {
+  const uid = actingUserId(c)
+  if (!uid) return []
+  const rows = await c
+    .get('db')
+    .select({ apartmentId: residencies.apartmentId })
+    .from(residencies)
+    .where(and(eq(residencies.userId, uid), isNull(residencies.endDate)))
+  return rows.map((r) => r.apartmentId)
+}
+
+export const vehicleRoutes = new Hono<AppEnv>()
+vehicleRoutes.use('*', withDb)
+vehicleRoutes.use('*', withAuth)
+vehicleRoutes.use('*', requireAuth)
+
+vehicleRoutes.post('/:id/alerts', requireRole('GUARD', 'ADMIN'), zValidator('json', vehicleAlertSchema), async (c) => {
+  if (c.env.PUSH_ENABLED !== 'true') return c.json({ error: 'notifications are not configured' }, 503)
+  const db = c.get('db')
+  const [vehicle] = await db.select().from(vehicles).where(eq(vehicles.id, c.req.param('id'))).limit(1)
+  if (!vehicle) return c.json({ error: 'vehicle not found' }, 404)
+  const { kind } = c.req.valid('json')
+  // Repeated taps/retries within the same 15-minute window share one event.
+  const window = Math.floor(Date.now() / 900_000)
+  const q
+==============================
+ROUTE: visitors.ts
+import { Hono } from 'hono'
+import type { Context } from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { and, desc, eq, isNull } from 'drizzle-orm'
+import { visitorEntries, visitorPreApprovals, residencies } from '@opensociety/db'
+import type { VisitorStatus, VisitorAction } from '@opensociety/shared'
+import {
+  createVisitorEntrySchema,
+  denyVisitorSchema,
+  checkInVisitorSchema,
+  createPreApprovalSchema,
+  redeemPreApprovalSchema,
+  preApprovalRedeemError,
+  VISITOR_TRANSITIONS,
+  canTransition,
+} from '@opensociety/shared'
+import { withDb, withAuth, requireAuth, requireRole, actingUserId } from '../middleware'
+import { parsePagination } from '../pagination'
+import { assignVisitorParking, releaseVisitorParking } from '../lib/visitor-parking'
+import type { AppEnv } from '../types'
+import { apartmentRecipients, notifyEvent, roleRecipients } from '../lib/push-events'
+
+// Applies a lifecycle transition to a visitor entry, enforcing the state
+// machine: 404 if the entry is missing, 409 if the action is illegal from its
+// current state, otherwise updates to the target status with `extra` fields.
+export async function applyTransition(
+  c: Context<AppEnv>,
+  action: VisitorAction,
+  extra: Partial<typeof visitorEntries.$inferInsert>,
+) {
+  const db = c.get('db')
+  const id = c.req.param('id')
+  const [entry] = await db
+    .select({ status: visitorEntries.status, apartmentId: visitorEntries.apartmentId })
+    .from(visitorEntries)
+    .where(eq(visitorEntries.id, id))
+    .limit(1)
+  if (!entry) return c.json({ error: 'not found' }, 404)
+  // Residents may only approve/deny visitors for an apartment they actively
+  // live in; admins (and guard-only actions) bypass this ownership check.
+  if ((action === 'approve' || action === 'deny') && c.get('userRole
+==============================
+ROUTE: webhooks.ts
+import { Hono } from 'hono'
+import { eq } from 'drizzle-orm'
+import { Webhook } from 'svix'
+import { users } from '@opensociety/db'
+import { withDb } from '../middleware'
+import type { AppEnv } from '../types'
+
+type ClerkUserEvent = {
+  type: string
+  data: {
+    id: string
+    first_name?: string | null
+    last_name?: string | null
+    email_addresses?: { email_address: string }[]
+    phone_numbers?: { phone_number: string }[]
+  }
+}
+
+export const webhookRoutes = new Hono<AppEnv>()
+webhookRoutes.use('*', withDb)
+
+// Clerk -> local user mirror. New users land as PENDING (schema default) until
+// an admin approves + assigns a residency (POST /users/:id/approve).
+webhookRoutes.post('/clerk', async (c) => {
+  const secret = c.env.CLERK_WEBHOOK_SECRET
+  if (!secret) return c.json({ error: 'webhook not configured' }, 501)
+
+  const payload = await c.req.text()
+  const headers = {
+    'svix-id': c.req.header('svix-id') ?? '',
+    'svix-timestamp': c.req.header('svix-timestamp') ?? '',
+    'svix-signature': c.req.header('svix-signature') ?? '',
+  }
+
+  let evt: ClerkUserEvent
+  try {
+    evt = new Webhook(secret).verify(payload, headers) as ClerkUserEvent
+  } catch {
+    return c.json({ error: 'invalid signature' }, 400)
+  }
+
+  const db = c.get('db')
+
+  if (evt.type === 'user.created' || evt.type === 'user.updated') {
+    const d = evt.data
+    const email = d.email_addresses?.[0]?.email_address ?? null
+    const phone = d.phone_numbers?.[0]?.phone_number ?? null
+    const name = [d.first_name, d.last_name].filter(Boolean).join(' ') || email || 'Resident'
+    const [existing] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.clerkId, d.id))
+      .limit(1)
+    if (existing) {
+      await db
+        .update(users)
+        .set({ email, phone, nam
+==============================
+
+
+```
+
+Here is a comprehensive architectural, functional, and module-level project report for **OpenSociety**, followed by strategic recommendations for high-impact feature additions.
+
+---
+
+# OpenSociety — Comprehensive Project Report & Technical Analysis
+
+## 1. Executive Summary & System Overview
+
+**OpenSociety** is an open-source, ad-free residential community and apartment society management platform designed on a **single-tenant-per-society** architecture. Each residential community deploys its own isolated API instance and PostgreSQL database, ensuring strict data ownership, privacy, and independent operational control without multi-tenant data leakage.
+
+The platform serves three primary user personas across two client applications backed by a unified edge/Node API:
+
+1. **Residents (iOS & Android Mobile App):** Manage visitor pre-approvals, QR guest passes, real-time visitor approvals/denials, community notices, maintenance bills, payment history, helpdesk tickets, household domestic staff, and personal vehicles.
+
+
+2. **Security / Gate Staff (iOS & Android Mobile App):** Operate the gate desk with QR/OTP pass scanning, walk-in visitor registration (with offline queueing), check-in/check-out logging, vehicle plate verification, parking slot allocation, and GPS-enabled shift attendance.
+
+
+3. **Society Administrators (Web Dashboard):** Configure society parameters, onboard apartments/residents, manage security guards and device bindings, publish notices, run automated monthly billing, manage vendor expenses/TDS, maintain a double-entry general ledger, and export statutory financial statements.
+
+
+
+---
+
+## 2. Monorepo Architecture & Technology Stack
+
+The repository is structured as a **pnpm workspace** orchestrated by **Turborepo**, separating applications (`apps/*`) from shared domain packages (`packages/*`).
+
+| Layer / Workspace | Directory | Core Technologies | Primary Responsibility |
+| --- | --- | --- | --- |
+| **Backend API** | `apps/api` | Hono, Node.js 22 / Cloudflare Workers, Zod, `pdf-lib`, AWS SDK (R2), Svix | REST API routing, RBAC middleware, double-entry ledger engine, PDF/CSV/XLSX/Tally generation, cron jobs, and push dispatch queues.
+
+ |
+| **Admin Web Portal** | `apps/web` | TanStack Start, TanStack Router & Query, React 19, Tailwind CSS v4, shadcn/ui, Clerk | Full administrative control plane, interactive setup wizard, financial reporting, and a zero-backend `/demo` sandbox.
+
+ |
+| **Mobile App** | `apps/mobile` | Expo (SDK 57), Expo Router, React Native 0.86, NativeWind v5, TanStack Query Persist, Clerk Expo | Native iOS/Android experience for residents and guards with bilingual support (English & Hindi), offline mutation queuing, and device demo mode.
+
+ |
+| **Database Layer** | `packages/db` | Drizzle ORM, PostgreSQL (Neon / PGlite) | Type-safe schema definitions, 25 incremental SQL migrations, indexes, and development seeding.
+
+ |
+| **Shared Domain** | `packages/shared` | TypeScript, Zod | Shared validation contracts, state machines, accounting/interest calculators, CSV parsers, and i18n dictionaries.
+
+ |
+| **Deployment** | `deploy/`, `.github/` | Docker, Docker Compose, Caddy, GitHub Actions | Containerized self-hosting configuration, reverse proxy, CI/CD pipelines, and EAS mobile builds.
+
+ |
+
+---
+
+## 3. Core Functional Modules & Database Design
+
+### A. Identity, Authentication & Access Control (`users`, `residencies`, `society_config`)
+
+* **Authentication Flow:** Powered by **Clerk** (`authn`-only). When a user signs up via Clerk, a Svix-verified webhook (`POST /webhooks/clerk`) mirrors the user into the local `users` table with `status = 'PENDING'` and `role = 'RESIDENT'`.
+
+
+* **Approval Gate:** Pending users cannot access society data until an administrator approves them (`POST /users/:id/approve`), linking their user ID to a physical unit in the `residencies` table (`OWNER`, `TENANT`, or `FAMILY`).
+
+
+* **Role-Based Access Control (RBAC):** Supports four system roles (`RESIDENT`, `GUARD`, `ADMIN`, `STAFF`) enforced via Hono route middleware (`requireAuth`, `requireRole`).
+
+
+
+### B. Visitor & Gate Management (`visitor_entries`, `visitor_pre_approvals`)
+
+* **Walk-in Visitor Workflow:**
+1. Guard registers a visitor at the gate (`POST /visitors`) with name, phone, type (`GUEST`, `DELIVERY`, `SERVICE`, `CAB`, `OTHER`), photo, and vehicle number (`status = 'PENDING'`).
+
+
+2. Push notifications alert active residents of the target apartment.
+
+
+3. Resident approves or denies the request in-app (`APPROVED` / `DENIED`), and the guard completes check-in (`ENTERED`) and check-out (`EXITED`).
+
+
+
+
+* **Pre-Approval & QR/OTP Passes:**
+* Residents create `ONE_TIME`, `SCHEDULED`, or `ALWAYS` passes generating a unique 6-character code and QR payload.
+
+
+* At the gate, guards scan the QR or enter the code (`POST /visitors/pre-approvals/redeem`), validating expiry and `maxUses` to immediately create an `APPROVED` entry without waiting for a live resident response.
+
+
+
+
+* **Offline Resilience:** Mobile gate clients attach a client-generated UUID (`clientId`) to offline-queued registrations; PostgreSQL enforces a unique index on `clientId` so network retries never create duplicate entries.
+
+
+
+### C. Security Guard Operations (`guards`, `guard_duty_sessions`, `guard_devices`)
+
+* **One-Device-Per-Guard Binding:** Guards send `x-device-id` and `x-device-model` headers. The first device used auto-binds to the guard's profile; subsequent requests from unauthorized devices receive `403 Forbidden` until an admin revokes the old binding.
+
+
+* **Shift & GPS Tracking:** Guards clock in and out (`guard_duty_sessions`), capturing timestamps and optional latitude/longitude coordinates to calculate shift durations.
+
+
+
+### D. Domestic / House Help Registry (`house_help`, `house_help_assignments`, `house_help_entries`, `house_help_reviews`)
+
+* **Multi-Apartment Assignment:** Domestic workers (maids, cooks, drivers, nannies, gardeners) are registered once and linked to multiple apartments via a junction table.
+
+
+* **Gate Attendance:** Guards log instant check-in/check-out events (`house_help_entries`) without requiring resident approval per visit.
+
+
+* **Trust & Verification:** Tracks ID proof (`AADHAAR`, `PAN`, `VOTER_ID`, etc.), admin verification flags, background check status (`PENDING`, `CLEARED`, `FLAGGED`), incident counts, and anonymous 1–5 star resident reviews (deduplicated per reviewer).
+
+
+
+### E. Vehicle & Parking Inventory (`vehicles`, `parking_slots`)
+
+* **Vehicle Registry:** Normalizes license plates (uppercase, stripped spaces) and links them to apartments (`CAR`, `BIKE`, `SCOOTER`, `BICYCLE`, `OTHER`).
+
+
+* **Vehicle Alerts:** Guards and admins can trigger rate-limited push alerts (deduplicated in 15-minute windows) to flat owners for wrongly parked or obstructing vehicles.
+
+
+* **Parking Pool:** Supports permanent and time-bound temporary resident allocations (`assignedUntil`), plus a dynamic `isVisitor` pool that auto-assigns free visitor slots on gate check-in and releases them on check-out.
+
+
+
+### F. Community Notices & Helpdesk Tickets (`notices`, `notice_reads`, `maintenance_tickets`)
+
+* **Notice Board:** Supports priority levels (`LOW` to `URGENT`), categories (`GENERAL`, `MAINTENANCE`, `EVENT`, `SECURITY`, `BILLING`, `EMERGENCY`), R2 file attachments, expiration timestamps, and idempotent per-user read receipts (`notice_reads`).
+
+
+* **Maintenance Tickets:** Residents raise apartment-specific issues (`PLUMBING`, `ELECTRICAL`, `CARPENTRY`, `HOUSEKEEPING`, `SECURITY`, `OTHER`) governed by a strict state machine (`OPEN` $\rightarrow$ `IN_PROGRESS` $\rightarrow$ `RESOLVED` $\rightarrow$ `CLOSED` / `CANCELLED`).
+
+
+
+### G. Billing, Expenses & Double-Entry Accounting (`maintenance_bills`, `payments`, `vendors`, `expenses`, `tds_entries`, `accounts`, `journal_entries`, `journal_lines`)
+
+* **Exact Integer Arithmetic:** All monetary values are stored in **paise** (`₹1 = 100 paise`) to prevent floating-point rounding errors across GST, part-payments, and ledger balancing.
+
+
+* **Automated Monthly Billing & Arrears:**
+* A singleton `bill_config` template defines recurring line items, GST rates, due dates, and opt-in simple interest on arrears (configurable annual rate and grace period).
+
+
+* Scheduled cron (`0 0 1 * *`) executes idempotent monthly bill generation (`uniqueIndex` on `(apartment_id, period_month)`) and auto-posts journal entries.
+
+
+
+
+* **Expense & Indian Tax Compliance (TDS/GST):** Tracks society vendors (PAN, GSTIN, bank details), `PAID` vs. `PAYABLE` expenses, input GST, and Income Tax Act TDS deductions (`SEC_194C`, `SEC_194J`, `SEC_194I`).
+
+
+* **Append-Only Double-Entry General Ledger:**
+* Structured Chart of Accounts (`ASSET`, `LIABILITY`, `INCOME`, `EXPENSE`, `FUND`) with an `isMutual` flag on income heads to separate member income (Principle of Mutuality) from taxable non-member income (e.g., FD interest, hoarding rent) for Indian ITR-5 filing.
+
+
+* Corrections use reversing entries (`isReversal`, `reversesId`) rather than mutating historical records.
+
+
+
+
+* **Financial Reporting & Exports:** Generates **Trial Balance**, **Income & Expenditure Statement**, **Balance Sheet**, **Receipts & Payments**, **Arrears Aging Buckets**, **Resident Account Statements**, and **Tally XML** exports alongside PDF, XLSX, and CSV downloads.
+
+
+
+### H. Push Notification Pipeline (`push_devices`, `push_deliveries`)
+
+* Uses a transactional outbox pattern: events insert rows into `push_deliveries` deduplicated by `(event_key, token)`, processed asynchronously via Cloudflare Queues or Node background workers with retry backoff and Expo Push receipt verification.
+
+
+
+---
+
+## 4. Key End-to-End System Flows
+
+1. **Resident Onboarding Flow:**
+`Clerk Sign-Up` $\rightarrow$ `Svix Webhook (/webhooks/clerk)` $\rightarrow$ `User created (PENDING)` $\rightarrow$ `Admin reviews queue` $\rightarrow$ `POST /users/:id/approve (creates Residency + sets APPROVED)` $\rightarrow$ `Mobile app unlocks resident dashboard`.
+
+
+2. **Pre-Approved Guest Entry Flow:**
+`Resident creates pass` $\rightarrow$ `Generates 6-char OTP & QR` $\rightarrow$ `Visitor arrives at gate` $\rightarrow$ `Guard scans QR / enters code` $\rightarrow$ `API validates time window & maxUses` $\rightarrow$ `Creates APPROVED visitor_entry` $\rightarrow$ `Assigns visitor parking slot (if vehicle)` $\rightarrow$ `Checks in visitor (ENTERED)`.
+
+
+3. **Billing-to-Ledger Flow:**
+`Cron triggers on 1st of month` $\rightarrow$ `Reads bill_config` $\rightarrow$ `Generates maintenance_bills & bill_line_items` $\rightarrow$ `Posts balanced journal_entry (Debit: Member Receivables, Credit: Maintenance Income / GST Payable)` $\rightarrow$ `Hourly cron sends bill reminder push notifications` $\rightarrow$ `Payment recorded (POST /payments)` $\rightarrow$ `Updates bill status & posts Bank/Cash Debit journal entry`.
+
+
+
+---
+
+## 5. Recommended Additional Features to Elevate the Platform
+
+While OpenSociety already possesses an exceptionally strong core (especially its double-entry accounting, offline gate queue, and single-tenant privacy model), adding the following modules would make it competitive with top-tier commercial society platforms:
+
+### 1. Native Online Payment Gateway Integration (UPI / Razorpay / Cashfree)
+
+* **Current State:** `paymentMethod` enum includes `UPI` and `ONLINE`, but payments are currently recorded manually by admins (`POST /payments`).
+
+
+* **Enhancement:** Integrate UPI Intent / payment gateway checkout links directly inside the resident mobile app's Bills screen, with webhook-driven automatic receipt generation, instant bill status updates, and automated double-entry ledger posting.
+
+
+
+### 2. Clubhouse & Amenity Booking System
+
+* **Current State:** No module exists for shared community spaces (clubhouse, tennis court, guest rooms, party hall).
+
+
+* **Enhancement:** Add `amenities` and `amenity_bookings` tables with slot-based calendars, per-flat booking quotas, refundable security deposit invoicing (linked to the existing `FUND`/`LIABILITY` ledger accounts), and QR access codes for facility entry.
+
+### 3. Community Polls, AGM Voting & Digital Minutes
+
+* **Current State:** Communication is one-way via `notices`.
+
+
+* **Enhancement:** Introduce one-flat-one-vote polling and Annual General Meeting (AGM) resolution voting (restricted to `OWNER` residencies where required by cooperative housing bye-laws), complete with quorum tracking and tamper-evident audit exports.
+
+### 4. Parcel & Courier Locker / Gate Custody Log
+
+* **Current State:** Deliveries are tracked only as transient `DELIVERY` visitor entries.
+
+
+* **Enhancement:** Add a dedicated parcel custody flow for when residents are away—allowing guards to log package photos/shelf locations at the gate, trigger a pickup OTP to the resident, and verify OTP upon parcel handover.
+
+### 5. Preventive Maintenance & AMC (Annual Maintenance Contract) Tracker
+
+* **Current State:** `maintenance_tickets` handles reactive resident complaints, and `vendors` stores contractor details.
+
+
+* **Enhancement:** Link `vendors` to recurring society asset schedules (elevators, DG sets, water pumps, fire extinguishers, STP) with automated reminders before AMC expiry, service checklists, and SLA compliance metrics.
+
+### 6. Emergency SOS & Panic Alert System
+
+* **Current State:** `society_config` stores an emergency contact number.
+
+
+* **Enhancement:** Add an in-app SOS trigger for residents (medical, fire, lift trapped, security threat) that bypasses standard notification throttling to sound high-priority alerts on all active guard devices and admin dashboards with the flat/tower location.
+
+### 7. Daily Pass / Recurring Staff QR Badges & Shift Handover Logs
+
+* **Current State:** Guards manually look up domestic help on check-in.
+
+
+* **Enhancement:** Generate printable/digital QR ID cards for verified `house_help` personnel so guards can scan them in under a second during peak morning rush hours, paired with formal guard shift-handover checklists (keys, walkie-talkies, pending parcels) between `guard_duty_sessions`.
+
+
+
+### 8. Fine-Grained Custom RBAC & Audit Trail UI
+
+* **Current State:** `schema.dbml` outlines `roles`, `permissions`, and `audit_logs`, while active Drizzle schemas enforce four fixed `userRole` enums.
+
+
+* **Enhancement:** Surface a searchable **Audit Log** viewer in the Admin Web Dashboard (tracking sensitive actions like bill cancellations, ledger reversals, interest waivers, and user approvals) and enable committee sub-roles (e.g., *Treasurer* with billing/ledger write access vs. *Cultural Secretary* with notice/event access).

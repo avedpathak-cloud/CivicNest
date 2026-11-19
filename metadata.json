@@ -1,0 +1,6 @@
+{
+  "name": "CivicNest — Integrated Society Management Platform",
+  "description": "Mobile-first PWA and web platform for residential societies up to 1,000 flats: helpdesk SLAs, maintenance billing, group-buying home services, governance voting, amenities, and gate operations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
